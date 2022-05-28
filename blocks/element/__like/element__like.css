@@ -1,0 +1,17 @@
+.element__like {
+    width: 22px;
+    height: 19px;
+    margin: 0 5px 0 0;
+    background-image: url(../../../images/element-like.png);
+    background-size: 22px 19px;
+    background-repeat: no-repeat;
+    background-position: center;
+    border: 0;
+    background-color: unset;
+    transition: .3s;
+}
+
+.element__like:hover {
+    opacity: .5;
+    cursor: pointer;
+}
