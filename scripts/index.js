@@ -8,39 +8,42 @@ let infoName = document.querySelector('.info__name');
 let infoDescription = document.querySelector('.info__description');
 
 // Задаем переменным значения строки имени в попапе и строки описания в попапе.
-let popupEditName = document.querySelector('.popup__name');
-let popupEditDescription = document.querySelector('.popup__description');
+let popupEditName = document.querySelector('.popup__input_type_name');
+let popupEditDescription = document.querySelector('.popup__input_type_description');
 
 /* Создаем функцию, которая при нажатии на кнопку "Редактировать":
 1. Открывает попап.
 2. присваиваем значениям строк значения элементов из профиля.
 */
 function formPopupOpen () {
-    popup.classList.remove('popup_hidden');
     popupEditName.value = infoName.textContent;
     popupEditDescription.value = infoDescription.textContent;
+    popup.classList.add('popup_opened');
 }
-
-// При нажатии на кнопку "Редактировать" вызываем функцию открытия попапа.
-buttonOpenPopup.addEventListener('click', formPopupOpen)
-
-// При нажатии на кнопку "Закрыть" закрываем попап.
-buttonClosePopup.addEventListener('click', function () {
-    popup.classList.add('popup_hidden');
-})
-
 // Пивязываем константу к кнопке сохранения в попапе.
-const popupSaveButton = document.querySelector('.popup__save');
+const popupSaveForm = document.querySelector('.popup__form');
+
+// Создаем функцию закрытия попапа при клике на кнопку "Закрыть".
+function closePopup () {
+    popup.classList.remove('popup_opened');
+}
 
 /* Создаем функцию для сохранения данных в попапе по кнопке "Сохранить", которая:
 1. Присваивает значениям элементов из профиля значения строк из попапа.
 2. Закрывает попап.
 */
-function formSubmitHandler () {
+function formSubmitHandler (evt) {
+    evt.preventDefault();
     infoName.textContent = popupEditName.value;
     infoDescription.textContent = popupEditDescription.value;
-    popup.classList.add('popup_hidden');
+    closePopup ();
 }
 
+// При нажатии на кнопку "Редактировать" вызываем функцию открытия попапа.
+buttonOpenPopup.addEventListener('click', formPopupOpen)
+
 // При нажатии на кнопку "Сохранить" вызываем функцию сохранения данных.
-popupSaveButton.addEventListener('click', formSubmitHandler)
+popupSaveForm.addEventListener('submit', formSubmitHandler)
+
+// При нажатии на кнопку "Закрыть" закрыть закрываем попап.
+buttonClosePopup.addEventListener('click', closePopup);
