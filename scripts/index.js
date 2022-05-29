@@ -1,7 +1,10 @@
-// Привязываем константы к значения элементов открытия попапа, самого попапа и закрытия попапа.
+// Привязываем константы к значениям элементов открытия попапа, самого попапа и закрытия попапа.
 const buttonOpenPopup = document.querySelector('.profile__edit');
 const popup = document.querySelector('.popup');
 const buttonClosePopup = document.querySelector('.popup__close');
+
+// Пивязываем константу к кнопке сохранения в попапе.
+const popupForm = document.querySelector('.popup__form');
 
 // Задаем переменным значения элементов имени профиля и описания профиля.
 let infoName = document.querySelector('.info__name');
@@ -20,8 +23,6 @@ function formPopupOpen () {
     popupEditDescription.value = infoDescription.textContent;
     popup.classList.add('popup_opened');
 }
-// Пивязываем константу к кнопке сохранения в попапе.
-const popupSaveForm = document.querySelector('.popup__form');
 
 // Создаем функцию закрытия попапа при клике на кнопку "Закрыть".
 function closePopup () {
@@ -43,7 +44,7 @@ function formSubmitHandler (evt) {
 buttonOpenPopup.addEventListener('click', formPopupOpen)
 
 // При нажатии на кнопку "Сохранить" вызываем функцию сохранения данных.
-popupSaveForm.addEventListener('submit', formSubmitHandler)
+popupForm.addEventListener('submit', formSubmitHandler)
 
 // При нажатии на кнопку "Закрыть" закрыть закрываем попап.
 buttonClosePopup.addEventListener('click', closePopup);
