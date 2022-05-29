@@ -3,7 +3,7 @@ const buttonOpenPopup = document.querySelector('.profile__edit');
 const popup = document.querySelector('.popup');
 const buttonClosePopup = document.querySelector('.popup__close');
 
-// Пивязываем константу к кнопке сохранения в попапе.
+// Пивязываем константу к форме в попапе.
 const popupForm = document.querySelector('.popup__form');
 
 // Задаем переменным значения элементов имени профиля и описания профиля.
