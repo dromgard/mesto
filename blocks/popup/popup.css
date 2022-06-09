@@ -4,8 +4,11 @@
     left: 0;
     width: 100vw;
     height: 100vh;
+    display: flex;
     justify-content: center;
     align-items: center;
     background: rgba(0, 0, 0, .5);
-    display: none;
+    opacity: 0;
+    visibility: hidden;
+    transition: .35s linear;
 }
