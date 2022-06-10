@@ -1,10 +1,18 @@
-// Привязываем константы к значениям элементов открытия попапа, самого попапа и закрытия попапа.
+// Привязываем константы к значениям элементов открытия попапа редактирования профиля.
 const buttonOpenPopup = document.querySelector('.profile__edit');
-const popup = document.querySelector('.popup');
+const popupEditProfile = document.querySelector('.popup_type_edit-profile');
 const buttonClosePopup = document.querySelector('.popup__close');
+
+// Привязываем константы к значениям элементов открытия попапа добавления элемента.
+const buttonAddElement = document.querySelector('.profile__add-button');
+const popupAddElement = document.querySelector('.popup_type_add-element');
+const buttonClosePopupAddEl = document.querySelector('.popup__close_type_add-element');
 
 // Пивязываем константу к форме в попапе.
 const popupForm = document.querySelector('.popup__form');
+
+// Пивязываем константу к форме в попапе.
+const popupFormAdEl = document.querySelector('.popup__form_type_add-element');
 
 // Задаем переменным значения элементов имени профиля и описания профиля.
 let infoName = document.querySelector('.info__name');
@@ -14,33 +22,115 @@ let infoDescription = document.querySelector('.info__description');
 let popupEditName = document.querySelector('.popup__input_type_name');
 let popupEditDescription = document.querySelector('.popup__input_type_description');
 
+// Задаем переменным значения строки имени и ссылки в попапе добавления нового элемента.
+let popupElementName = document.querySelector('.popup__input_element_name');
+let popupElementLink = document.querySelector('.popup__input_element_link');
+
+// Задаем переменной элемент "Лайк".
+let buttonLike = document.querySelector('.element__like');
+
+// Массив стартовых элементов.
+const initialCards = [
+    {
+        name: 'Архыз',
+        link: 'https://pictures.s3.yandex.net/frontend-developer/cards-compressed/arkhyz.jpg'
+    },
+    {
+        name: 'Челябинская область',
+        link: 'https://pictures.s3.yandex.net/frontend-developer/cards-compressed/chelyabinsk-oblast.jpg'
+    },
+    {
+        name: 'Иваново',
+        link: 'https://pictures.s3.yandex.net/frontend-developer/cards-compressed/ivanovo.jpg'
+    },
+    {
+        name: 'Камчатка',
+        link: 'https://pictures.s3.yandex.net/frontend-developer/cards-compressed/kamchatka.jpg'
+    },
+    {
+        name: 'Холмогорский район',
+        link: 'https://pictures.s3.yandex.net/frontend-developer/cards-compressed/kholmogorsky-rayon.jpg'
+    },
+    {
+        name: 'Байкал',
+        link: 'https://pictures.s3.yandex.net/frontend-developer/cards-compressed/baikal.jpg'
+    }
+];
+
+// Задаем переменной шаблон Template.
+const elementTemplate = document.querySelector('#element').content;
+
+// Задаем переменной секцию elements - сюда буду добавляться новые элементы.
+const elements = document.querySelector('.elements');
+
+initialCards.forEach(
+    function (item) {
+        // Клонируем верстку одного элемента.
+        const newElement = elementTemplate.querySelector('.element').cloneNode(true);
+
+        newElement.querySelector('.element__image').src = item.link;
+        newElement.querySelector('.element__title').textContent = item.name;
+
+        elements.append(newElement);
+    }
+);
+
 /* Создаем функцию, которая при нажатии на кнопку "Редактировать":
 1. Открывает попап.
 2. присваиваем значениям строк значения элементов из профиля.
 */
-function formPopupOpen () {
+function formPopupOpen() {
     popupEditName.value = infoName.textContent;
     popupEditDescription.value = infoDescription.textContent;
-    popup.classList.add('popup_opened');
+    popupEditProfile.classList.add('popup_opened');
 }
 
 // Создаем функцию закрытия попапа при клике на кнопку "Закрыть".
-function closePopup () {
-    popup.classList.remove('popup_opened');
+function closePopup() {
+    popupEditProfile.classList.remove('popup_opened');
 }
 
 /* Создаем функцию для сохранения данных в попапе по кнопке "Сохранить", которая:
 1. Присваивает значениям элементов из профиля значения строк из попапа.
 2. Закрывает попап.
 */
-function formSubmitHandler (evt) {
+function formSubmitHandler(evt) {
     evt.preventDefault();
     infoName.textContent = popupEditName.value;
     infoDescription.textContent = popupEditDescription.value;
-    closePopup ();
+    closePopup();
+}
+/*
+// Создаем функцию проставления и удаления лайка.
+function addRemoveLike(evt) {
+    const eventTarget = evt.target;
+    eventTarget.classList.toggle('element__like_active');
+}*/
+
+function formAddElement() {
+    popupAddElement.classList.add('popup_opened');
 }
 
-// При нажатии на кнопку "Редактировать" вызываем функцию открытия попапа.
+function formSubmitHandlerAdEl(evt) {
+    evt.preventDefault();
+
+    // Клонируем верстку одного элемента.
+    const newElement = elementTemplate.querySelector('.element').cloneNode(true);
+
+    newElement.querySelector('.element__image').src = popupElementLink.value;
+    newElement.querySelector('.element__title').textContent = popupElementName.value;
+
+    elements.prepend(newElement);
+
+    closePopupAddEl();
+}
+
+// Создаем функцию закрытия попапа добавления элемента при клике на кнопку "Закрыть".
+function closePopupAddEl() {
+    popupAddElement.classList.remove('popup_opened');
+}
+
+// При нажатии на кнопку "Редактировать" вызываем функцию открытия попапа редактирования профиля.
 buttonOpenPopup.addEventListener('click', formPopupOpen)
 
 // При нажатии на кнопку "Сохранить" вызываем функцию сохранения данных.
@@ -48,3 +138,18 @@ popupForm.addEventListener('submit', formSubmitHandler)
 
 // При нажатии на кнопку "Закрыть" закрыть закрываем попап.
 buttonClosePopup.addEventListener('click', closePopup);
+
+// При нажатии на кнопку "Добавить" вызываем функцию открытия попапа добавления элемента.
+buttonAddElement.addEventListener('click', formAddElement)
+
+// При нажатии на кнопку "Сохранить" вызываем функцию добавления элемента.
+popupFormAdEl.addEventListener('submit', formSubmitHandlerAdEl)
+
+// При нажатии на кнопку "Закрыть" закрыть закрываем попап добавления элемента.
+buttonClosePopupAddEl.addEventListener('click', closePopupAddEl);
+
+// При нажатии на кнопку "Лайк" ставим или удлаляем лайк.
+//buttonLike.addEventListener('click', function addRemoveLike(evt) {
+   // const eventTarget = evt.target;
+   // eventTarget.classList.toggle('element__like_active');
+//});
