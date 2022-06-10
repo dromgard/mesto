@@ -67,12 +67,16 @@ initialCards.forEach(
     function (item) {
         // Клонируем верстку одного элемента.
         const newElement = elementTemplate.querySelector('.element').cloneNode(true);
-     
+
         newElement.querySelector('.element__image').src = item.link;
         newElement.querySelector('.element__title').textContent = item.name;
 
         newElement.querySelector('.element__like').addEventListener('click', function (evt) {
             evt.target.classList.toggle('element__like_active');
+        });
+
+        newElement.querySelector('.element__delete').addEventListener('click', function () {
+            newElement.remove();
         });
 
         elements.append(newElement);
@@ -124,6 +128,10 @@ function formSubmitHandlerAdEl(evt) {
 
     newElement.querySelector('.element__like').addEventListener('click', function (evt) {
         evt.target.classList.toggle('element__like_active');
+    });
+
+    newElement.querySelector('.element__delete').addEventListener('click', function () {
+        newElement.remove();
     });
 
     elements.prepend(newElement);
