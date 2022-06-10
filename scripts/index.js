@@ -67,13 +67,21 @@ initialCards.forEach(
     function (item) {
         // Клонируем верстку одного элемента.
         const newElement = elementTemplate.querySelector('.element').cloneNode(true);
-
+     
         newElement.querySelector('.element__image').src = item.link;
         newElement.querySelector('.element__title').textContent = item.name;
 
+        newElement.querySelector('.element__like').addEventListener('click', function (evt) {
+            evt.target.classList.toggle('element__like_active');
+        });
+
         elements.append(newElement);
-    }
-);
+    });
+
+//const elementLike = elementTemplate.querySelector('.element__like');
+//elementLike.addEventListener('click', function (evt) {
+//  evt.target.classList.toggle('element__like_active');
+//});
 
 /* Создаем функцию, которая при нажатии на кнопку "Редактировать":
 1. Открывает попап.
@@ -100,12 +108,6 @@ function formSubmitHandler(evt) {
     infoDescription.textContent = popupEditDescription.value;
     closePopup();
 }
-/*
-// Создаем функцию проставления и удаления лайка.
-function addRemoveLike(evt) {
-    const eventTarget = evt.target;
-    eventTarget.classList.toggle('element__like_active');
-}*/
 
 function formAddElement() {
     popupAddElement.classList.add('popup_opened');
@@ -120,6 +122,10 @@ function formSubmitHandlerAdEl(evt) {
     newElement.querySelector('.element__image').src = popupElementLink.value;
     newElement.querySelector('.element__title').textContent = popupElementName.value;
 
+    newElement.querySelector('.element__like').addEventListener('click', function (evt) {
+        evt.target.classList.toggle('element__like_active');
+    });
+
     elements.prepend(newElement);
 
     closePopupAddEl();
@@ -128,6 +134,9 @@ function formSubmitHandlerAdEl(evt) {
 // Создаем функцию закрытия попапа добавления элемента при клике на кнопку "Закрыть".
 function closePopupAddEl() {
     popupAddElement.classList.remove('popup_opened');
+    popupElementLink.value = '';
+    popupElementName.value = '';
+
 }
 
 // При нажатии на кнопку "Редактировать" вызываем функцию открытия попапа редактирования профиля.
@@ -147,9 +156,3 @@ popupFormAdEl.addEventListener('submit', formSubmitHandlerAdEl)
 
 // При нажатии на кнопку "Закрыть" закрыть закрываем попап добавления элемента.
 buttonClosePopupAddEl.addEventListener('click', closePopupAddEl);
-
-// При нажатии на кнопку "Лайк" ставим или удлаляем лайк.
-//buttonLike.addEventListener('click', function addRemoveLike(evt) {
-   // const eventTarget = evt.target;
-   // eventTarget.classList.toggle('element__like_active');
-//});
