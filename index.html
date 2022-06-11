@@ -67,11 +67,24 @@
         <div class="popup__container">
             <h2 class="popup__title">Новое место</h2>
             <form name="info-edit" class="popup__form popup__form_type_add-element">
-                <input type="text" placeholder="Название" name="info-name" class="popup__input popup__input_element_name" required>
-                <input type="text" placeholder="Ссылка на картинку" name="info-description" class="popup__input popup__input_element_link" required>
+                <input type="text" placeholder="Название" name="info-name"
+                    class="popup__input popup__input_element_name" required>
+                <input type="text" placeholder="Ссылка на картинку" name="info-description"
+                    class="popup__input popup__input_element_link" required>
                 <button class="popup__save" type="submit" aria-label="Создать новый элемент">Создать</button>
             </form>
             <button class="popup__close popup__close_type_add-element" type="button"
+                aria-label="Закрыть окно добавления нового элемента"></button>
+        </div>
+    </div>
+
+    <!--Попап превью изображения элемента-->
+    <div class="popup popup_previewed popup_type_image-preview">
+        <div class="popup__preview">
+            <img src="#" alt="#"
+                class="popup__image-preview">
+            <p class="popup__image-title"></p>
+            <button class="popup__close popup__close_type_image-preview" type="button"
                 aria-label="Закрыть окно добавления нового элемента"></button>
         </div>
     </div>

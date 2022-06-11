@@ -8,6 +8,12 @@ const buttonAddElement = document.querySelector('.profile__add-button');
 const popupAddElement = document.querySelector('.popup_type_add-element');
 const buttonClosePopupAddEl = document.querySelector('.popup__close_type_add-element');
 
+// Привязываем константы к значениям элементов открытия попапа превью изображения.
+const popupImagePreview = document.querySelector('.popup_type_image-preview');
+const buttonCloseImagePreview = document.querySelector('.popup__close_type_image-preview');
+const popupImageElement = document.querySelector('.popup__image-preview');
+const popupImageTitle = document.querySelector('.popup__image-title');
+
 // Пивязываем константу к форме в попапе.
 const popupForm = document.querySelector('.popup__form');
 
@@ -79,6 +85,12 @@ initialCards.forEach(
             newElement.remove();
         });
 
+        newElement.querySelector('.element__image').addEventListener('click', function () {
+            popupImageElement.src = item.link;
+            popupImageTitle.textContent = item.name;
+            popupImagePreview.classList.add('popup_opened');
+        });
+
         elements.append(newElement);
     });
 
@@ -134,6 +146,12 @@ function formSubmitHandlerAdEl(evt) {
         newElement.remove();
     });
 
+    newElement.querySelector('.element__image').addEventListener('click', function () {
+        popupImagePreview.classList.add('popup_opened');
+        popupImageElement.src = newElement.querySelector('.element__image').src;
+        popupImageTitle.textContent = newElement.querySelector('.element__title').textContent;
+    });
+
     elements.prepend(newElement);
 
     closePopupAddEl();
@@ -144,7 +162,11 @@ function closePopupAddEl() {
     popupAddElement.classList.remove('popup_opened');
     popupElementLink.value = '';
     popupElementName.value = '';
+}
 
+// Создаем функцию закрытия попапа превью изображения элемента при клике на кнопку "Закрыть".
+function closePopupImagePreview() {
+    popupImagePreview.classList.remove('popup_opened');
 }
 
 // При нажатии на кнопку "Редактировать" вызываем функцию открытия попапа редактирования профиля.
@@ -164,3 +186,6 @@ popupFormAdEl.addEventListener('submit', formSubmitHandlerAdEl)
 
 // При нажатии на кнопку "Закрыть" закрыть закрываем попап добавления элемента.
 buttonClosePopupAddEl.addEventListener('click', closePopupAddEl);
+
+// При нажатии на кнопку "Закрыть" закрыть закрываем попап добавления элемента.
+buttonCloseImagePreview.addEventListener('click', closePopupImagePreview);

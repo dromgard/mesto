@@ -59,3 +59,11 @@
 @import url(../blocks/popup/__close/popup__close.css);
 
 @import url(../blocks/popup/_opened/popup_opened.css);
+
+@import url(../blocks/popup/__preview/popup__preview.css);
+
+@import url(../blocks/popup/_previewed/popup_previewed.css);
+
+@import url(../blocks/popup/__image-preview/popup__image-preview.css);
+
+@import url(../blocks/popup/__image-title/popup__image-title.css);
