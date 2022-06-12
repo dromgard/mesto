@@ -58,7 +58,7 @@
                 <input type="text" name="info-description" class="popup__input popup__input_type_description" required>
                 <button class="popup__save" type="submit" aria-label="Сохранить изменения в профиле">Сохранить</button>
             </form>
-            <button class="popup__close" type="button" aria-label="Закрыть окно редактирования профиля"></button>
+            <button class="popup__close popup__close_type_edit-profile" type="button" aria-label="Закрыть окно редактирования профиля"></button>
         </div>
     </div>
 
@@ -81,8 +81,7 @@
     <!--Попап превью изображения элемента-->
     <div class="popup popup_previewed popup_type_image-preview">
         <div class="popup__preview">
-            <img src="#" alt="#"
-                class="popup__image-preview">
+            <img src="#" alt="#" class="popup__image-preview">
             <p class="popup__image-title"></p>
             <button class="popup__close popup__close_type_image-preview" type="button"
                 aria-label="Закрыть окно добавления нового элемента"></button>
@@ -92,7 +91,7 @@
     <!--Шаблон для новых элементов-->
     <template id="element">
         <article class="element">
-            <img src="#" alt="" class="element__image">
+            <img src="#" alt="#" class="element__image">
             <div class="element__description">
                 <h2 class="element__title"></h2>
                 <button class="element__like" type="button" aria-label="Поставить лайк"></button>

@@ -1,7 +1,8 @@
+//CONSTANTS
 // Привязываем константы к значениям элементов открытия попапа редактирования профиля.
-const buttonOpenPopup = document.querySelector('.profile__edit');
+const buttonOpenProfileEdit = document.querySelector('.profile__edit');
 const popupEditProfile = document.querySelector('.popup_type_edit-profile');
-const buttonClosePopup = document.querySelector('.popup__close');
+const buttonCloseEditProfile = document.querySelector('.popup__close_type_edit-profile');
 
 // Привязываем константы к значениям элементов открытия попапа добавления элемента.
 const buttonAddElement = document.querySelector('.profile__add-button');
@@ -21,45 +22,45 @@ const popupForm = document.querySelector('.popup__form');
 const popupFormAdEl = document.querySelector('.popup__form_type_add-element');
 
 // Задаем переменным значения элементов имени профиля и описания профиля.
-let infoName = document.querySelector('.info__name');
-let infoDescription = document.querySelector('.info__description');
+const infoName = document.querySelector('.info__name');
+const infoDescription = document.querySelector('.info__description');
 
 // Задаем переменным значения строки имени в попапе и строки описания в попапе.
-let popupEditName = document.querySelector('.popup__input_type_name');
-let popupEditDescription = document.querySelector('.popup__input_type_description');
+const popupEditName = document.querySelector('.popup__input_type_name');
+const popupEditDescription = document.querySelector('.popup__input_type_description');
 
 // Задаем переменным значения строки имени и ссылки в попапе добавления нового элемента.
-let popupElementName = document.querySelector('.popup__input_element_name');
-let popupElementLink = document.querySelector('.popup__input_element_link');
+const popupElementName = document.querySelector('.popup__input_element_name');
+const popupElementLink = document.querySelector('.popup__input_element_link');
 
 // Задаем переменной элемент "Лайк".
-let buttonLike = document.querySelector('.element__like');
+const buttonLike = document.querySelector('.element__like');
 
 // Массив стартовых элементов.
 const initialCards = [
     {
         name: 'Архыз',
-        link: 'https://pictures.s3.yandex.net/frontend-developer/cards-compressed/arkhyz.jpg'
+        link: 'images/arkhyz.jpg'
     },
     {
         name: 'Челябинская область',
-        link: 'https://pictures.s3.yandex.net/frontend-developer/cards-compressed/chelyabinsk-oblast.jpg'
+        link: 'images/chelyabinsk-oblast.jpg'
     },
     {
         name: 'Иваново',
-        link: 'https://pictures.s3.yandex.net/frontend-developer/cards-compressed/ivanovo.jpg'
+        link: 'images/ivanovo.jpg'
     },
     {
         name: 'Камчатка',
-        link: 'https://pictures.s3.yandex.net/frontend-developer/cards-compressed/kamchatka.jpg'
+        link: 'images/kamchatka.jpg'
     },
     {
         name: 'Холмогорский район',
-        link: 'https://pictures.s3.yandex.net/frontend-developer/cards-compressed/kholmogorsky-rayon.jpg'
+        link: 'images/kholmogorsky-rayon.jpg'
     },
     {
         name: 'Байкал',
-        link: 'https://pictures.s3.yandex.net/frontend-developer/cards-compressed/baikal.jpg'
+        link: 'images/baikal.jpg'
     }
 ];
 
@@ -69,48 +70,54 @@ const elementTemplate = document.querySelector('#element').content;
 // Задаем переменной секцию elements - сюда буду добавляться новые элементы.
 const elements = document.querySelector('.elements');
 
+//ELEMENTS
+//Создаем наполенние блока Elements данными из массива.
 initialCards.forEach(
     function (item) {
         // Клонируем верстку одного элемента.
         const newElement = elementTemplate.querySelector('.element').cloneNode(true);
 
-        newElement.querySelector('.element__image').src = item.link;
+        //Присваиваем значениям элементов значения из полей попапа.
         newElement.querySelector('.element__title').textContent = item.name;
+        newElement.querySelector('.element__image').src = item.link;
+        newElement.querySelector('.element__image').alt = item.name;
 
+        //Проставление лайка.
         newElement.querySelector('.element__like').addEventListener('click', function (evt) {
             evt.target.classList.toggle('element__like_active');
         });
 
+        //Удаление элемента.
         newElement.querySelector('.element__delete').addEventListener('click', function () {
             newElement.remove();
         });
 
+        //Просмотр увеличенного изображения в попапе.
         newElement.querySelector('.element__image').addEventListener('click', function () {
             popupImageElement.src = item.link;
             popupImageTitle.textContent = item.name;
+            popupImageElement.alt = item.name;
             popupImagePreview.classList.add('popup_opened');
         });
 
+        //Добавляем новый элемент в начало списка.
         elements.append(newElement);
     });
 
-//const elementLike = elementTemplate.querySelector('.element__like');
-//elementLike.addEventListener('click', function (evt) {
-//  evt.target.classList.toggle('element__like_active');
-//});
-
+//POPUPS
+//Попап редактирования профиля.
 /* Создаем функцию, которая при нажатии на кнопку "Редактировать":
 1. Открывает попап.
-2. присваиваем значениям строк значения элементов из профиля.
+2. Присваиваем значениям строк значения элементов из профиля.
 */
-function formPopupOpen() {
+function formPopupProfileEdit() {
     popupEditName.value = infoName.textContent;
     popupEditDescription.value = infoDescription.textContent;
     popupEditProfile.classList.add('popup_opened');
 }
 
-// Создаем функцию закрытия попапа при клике на кнопку "Закрыть".
-function closePopup() {
+// Создаем функцию закрытия попапа редактирования профиля при клике на кнопку "Закрыть".
+function closePopupEditProfile() {
     popupEditProfile.classList.remove('popup_opened');
 }
 
@@ -122,39 +129,13 @@ function formSubmitHandler(evt) {
     evt.preventDefault();
     infoName.textContent = popupEditName.value;
     infoDescription.textContent = popupEditDescription.value;
-    closePopup();
+    closePopupEditProfile();
 }
 
+//Попап добавления нового элемента.
+//Создаем функцию открытия попапа добавления нового элемента.
 function formAddElement() {
     popupAddElement.classList.add('popup_opened');
-}
-
-function formSubmitHandlerAdEl(evt) {
-    evt.preventDefault();
-
-    // Клонируем верстку одного элемента.
-    const newElement = elementTemplate.querySelector('.element').cloneNode(true);
-
-    newElement.querySelector('.element__image').src = popupElementLink.value;
-    newElement.querySelector('.element__title').textContent = popupElementName.value;
-
-    newElement.querySelector('.element__like').addEventListener('click', function (evt) {
-        evt.target.classList.toggle('element__like_active');
-    });
-
-    newElement.querySelector('.element__delete').addEventListener('click', function () {
-        newElement.remove();
-    });
-
-    newElement.querySelector('.element__image').addEventListener('click', function () {
-        popupImagePreview.classList.add('popup_opened');
-        popupImageElement.src = newElement.querySelector('.element__image').src;
-        popupImageTitle.textContent = newElement.querySelector('.element__title').textContent;
-    });
-
-    elements.prepend(newElement);
-
-    closePopupAddEl();
 }
 
 // Создаем функцию закрытия попапа добавления элемента при клике на кнопку "Закрыть".
@@ -164,19 +145,58 @@ function closePopupAddEl() {
     popupElementName.value = '';
 }
 
+//Создаем функцию создания нового эелемента.
+function formSubmitHandlerAdEl(evt) {
+    evt.preventDefault();
+
+    //Клонируем верстку одного элемента.
+    const newElement = elementTemplate.querySelector('.element').cloneNode(true);
+
+    //Присваиваем значениям элементов значения из полей попапа.
+    newElement.querySelector('.element__title').textContent = popupElementName.value;
+    newElement.querySelector('.element__image').src = popupElementLink.value;
+    newElement.querySelector('.element__image').alt = popupElementName.value;
+
+    //Проставление лайка.
+    newElement.querySelector('.element__like').addEventListener('click', function (evt) {
+        evt.target.classList.toggle('element__like_active');
+    });
+
+    //Удаление элемента.
+    newElement.querySelector('.element__delete').addEventListener('click', function () {
+        newElement.remove();
+    });
+
+    //Просмотр увеличенного изображения в попапе.
+    newElement.querySelector('.element__image').addEventListener('click', function () {
+        popupImagePreview.classList.add('popup_opened');
+        popupImageElement.src = newElement.querySelector('.element__image').src;
+        popupImageTitle.textContent = newElement.querySelector('.element__title').textContent;
+        popupImageElement.alt = newElement.querySelector('.element__title').textContent;
+    });
+
+    //Добавляем новый элемент в начало списка.
+    elements.prepend(newElement);
+
+    //Закрываем попап.
+    closePopupAddEl();
+}
+
+//Попап превью изображения элемента.
 // Создаем функцию закрытия попапа превью изображения элемента при клике на кнопку "Закрыть".
 function closePopupImagePreview() {
     popupImagePreview.classList.remove('popup_opened');
 }
 
+//LISTENERS
 // При нажатии на кнопку "Редактировать" вызываем функцию открытия попапа редактирования профиля.
-buttonOpenPopup.addEventListener('click', formPopupOpen)
+buttonOpenProfileEdit.addEventListener('click', formPopupProfileEdit)
 
-// При нажатии на кнопку "Сохранить" вызываем функцию сохранения данных.
+// При нажатии на кнопку "Сохранить" вызываем функцию сохранения данных профиля.
 popupForm.addEventListener('submit', formSubmitHandler)
 
-// При нажатии на кнопку "Закрыть" закрыть закрываем попап.
-buttonClosePopup.addEventListener('click', closePopup);
+// При нажатии на кнопку "Закрыть" закрываем попап редактирования профиля.
+buttonCloseEditProfile.addEventListener('click', closePopupEditProfile);
 
 // При нажатии на кнопку "Добавить" вызываем функцию открытия попапа добавления элемента.
 buttonAddElement.addEventListener('click', formAddElement)
@@ -184,8 +204,8 @@ buttonAddElement.addEventListener('click', formAddElement)
 // При нажатии на кнопку "Сохранить" вызываем функцию добавления элемента.
 popupFormAdEl.addEventListener('submit', formSubmitHandlerAdEl)
 
-// При нажатии на кнопку "Закрыть" закрыть закрываем попап добавления элемента.
+// При нажатии на кнопку "Закрыть" закрываем попап добавления элемента.
 buttonClosePopupAddEl.addEventListener('click', closePopupAddEl);
 
-// При нажатии на кнопку "Закрыть" закрыть закрываем попап добавления элемента.
+// При нажатии на кнопку "Закрыть" закрываем попап превью изображения элемента.
 buttonCloseImagePreview.addEventListener('click', closePopupImagePreview);
