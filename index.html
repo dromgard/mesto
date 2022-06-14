@@ -53,9 +53,9 @@
     <div class="popup popup_type_edit-profile">
         <div class="popup__container">
             <h2 class="popup__title">Редактировать профиль</h2>
-            <form name="info-edit" class="popup__form">
-                <input type="text" name="info-name" class="popup__input popup__input_type_name" required>
-                <input type="text" name="info-description" class="popup__input popup__input_type_description" required>
+            <form name="info-edit" class="popup__form popup__form_type_edit-profile">
+                <input type="text" placeholder="Название профиля" name="info-name" class="popup__input popup__input_type_name" required>
+                <input type="text" placeholder="Описание профиля" name="info-description" class="popup__input popup__input_type_description" required>
                 <button class="popup__save" type="submit" aria-label="Сохранить изменения в профиле">Сохранить</button>
             </form>
             <button class="popup__close popup__close_type_edit-profile" type="button" aria-label="Закрыть окно редактирования профиля"></button>
@@ -66,7 +66,7 @@
     <div class="popup popup_type_add-element">
         <div class="popup__container">
             <h2 class="popup__title">Новое место</h2>
-            <form name="info-edit" class="popup__form popup__form_type_add-element">
+            <form name="add-element" class="popup__form popup__form_type_add-element">
                 <input type="text" placeholder="Название" name="info-name"
                     class="popup__input popup__input_element_name" required>
                 <input type="text" placeholder="Ссылка на картинку" name="info-description"
@@ -101,6 +101,7 @@
     </template>
 
     <!--Подключаем JS-->
+    <script src="./scripts/data.js"></script>
     <script src="./scripts/index.js"></script>
 </body>
 

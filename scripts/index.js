@@ -15,10 +15,10 @@ const buttonCloseImagePreview = document.querySelector('.popup__close_type_image
 const popupImageElement = document.querySelector('.popup__image-preview');
 const popupImageTitle = document.querySelector('.popup__image-title');
 
-// Пивязываем константу к форме в попапе.
-const popupForm = document.querySelector('.popup__form');
+// Привязываем константу к форме в попапе.
+const popopupProfileForm = document.querySelector('.popup__form_type_edit-profile');
 
-// Пивязываем константу к форме в попапе.
+// Привязываем константу к форме в попапе.
 const popupFormAdEl = document.querySelector('.popup__form_type_add-element');
 
 // Задаем переменным значения элементов имени профиля и описания профиля.
@@ -36,126 +36,34 @@ const popupElementLink = document.querySelector('.popup__input_element_link');
 // Задаем переменной элемент "Лайк".
 const buttonLike = document.querySelector('.element__like');
 
-// Массив стартовых элементов.
-const initialCards = [
-    {
-        name: 'Архыз',
-        link: 'images/arkhyz.jpg'
-    },
-    {
-        name: 'Челябинская область',
-        link: 'images/chelyabinsk-oblast.jpg'
-    },
-    {
-        name: 'Иваново',
-        link: 'images/ivanovo.jpg'
-    },
-    {
-        name: 'Камчатка',
-        link: 'images/kamchatka.jpg'
-    },
-    {
-        name: 'Холмогорский район',
-        link: 'images/kholmogorsky-rayon.jpg'
-    },
-    {
-        name: 'Байкал',
-        link: 'images/baikal.jpg'
-    }
-];
-
 // Задаем переменной шаблон Template.
 const elementTemplate = document.querySelector('#element').content;
 
 // Задаем переменной секцию elements - сюда буду добавляться новые элементы.
 const elements = document.querySelector('.elements');
 
-//ELEMENTS
-//Создаем наполенние блока Elements данными из массива.
-initialCards.forEach(
-    function (item) {
-        // Клонируем верстку одного элемента.
-        const newElement = elementTemplate.querySelector('.element').cloneNode(true);
-
-        //Присваиваем значениям элементов значения из полей попапа.
-        newElement.querySelector('.element__title').textContent = item.name;
-        newElement.querySelector('.element__image').src = item.link;
-        newElement.querySelector('.element__image').alt = item.name;
-
-        //Проставление лайка.
-        newElement.querySelector('.element__like').addEventListener('click', function (evt) {
-            evt.target.classList.toggle('element__like_active');
-        });
-
-        //Удаление элемента.
-        newElement.querySelector('.element__delete').addEventListener('click', function () {
-            newElement.remove();
-        });
-
-        //Просмотр увеличенного изображения в попапе.
-        newElement.querySelector('.element__image').addEventListener('click', function () {
-            popupImageElement.src = item.link;
-            popupImageTitle.textContent = item.name;
-            popupImageElement.alt = item.name;
-            popupImagePreview.classList.add('popup_opened');
-        });
-
-        //Добавляем новый элемент в начало списка.
-        elements.append(newElement);
-    });
-
 //POPUPS
-//Попап редактирования профиля.
-/* Создаем функцию, которая при нажатии на кнопку "Редактировать":
-1. Открывает попап.
-2. Присваиваем значениям строк значения элементов из профиля.
-*/
-function formPopupProfileEdit() {
-    popupEditName.value = infoName.textContent;
-    popupEditDescription.value = infoDescription.textContent;
-    popupEditProfile.classList.add('popup_opened');
+//Открытие попапа.
+function openPopup(popup) {
+    popup.classList.add('popup_opened');
 }
 
-// Создаем функцию закрытия попапа редактирования профиля при клике на кнопку "Закрыть".
-function closePopupEditProfile() {
-    popupEditProfile.classList.remove('popup_opened');
+//Закрытие попапа.
+function closePopup(popup) {
+    popup.classList.remove('popup_opened');
 }
 
-/* Создаем функцию для сохранения данных в попапе по кнопке "Сохранить", которая:
-1. Присваивает значениям элементов из профиля значения строк из попапа.
-2. Закрывает попап.
-*/
-function formSubmitHandler(evt) {
-    evt.preventDefault();
-    infoName.textContent = popupEditName.value;
-    infoDescription.textContent = popupEditDescription.value;
-    closePopupEditProfile();
-}
-
-//Попап добавления нового элемента.
-//Создаем функцию открытия попапа добавления нового элемента.
-function formAddElement() {
-    popupAddElement.classList.add('popup_opened');
-}
-
-// Создаем функцию закрытия попапа добавления элемента при клике на кнопку "Закрыть".
-function closePopupAddEl() {
-    popupAddElement.classList.remove('popup_opened');
-    popupElementLink.value = '';
-    popupElementName.value = '';
-}
-
-//Создаем функцию создания нового эелемента.
-function formSubmitHandlerAdEl(evt) {
-    evt.preventDefault();
-
-    //Клонируем верстку одного элемента.
+//ELEMENTS
+//Создаем функцию создания карточки данными из массива или данными из попапа.
+function createCard(cardName, cardLink) {
+    // Клонируем верстку одного элемента.
     const newElement = elementTemplate.querySelector('.element').cloneNode(true);
+    const elementImage = newElement.querySelector('.element__image');
 
     //Присваиваем значениям элементов значения из полей попапа.
-    newElement.querySelector('.element__title').textContent = popupElementName.value;
-    newElement.querySelector('.element__image').src = popupElementLink.value;
-    newElement.querySelector('.element__image').alt = popupElementName.value;
+    newElement.querySelector('.element__title').textContent = cardName;
+    elementImage.src = cardLink;
+    elementImage.alt = cardName;
 
     //Проставление лайка.
     newElement.querySelector('.element__like').addEventListener('click', function (evt) {
@@ -168,44 +76,89 @@ function formSubmitHandlerAdEl(evt) {
     });
 
     //Просмотр увеличенного изображения в попапе.
-    newElement.querySelector('.element__image').addEventListener('click', function () {
-        popupImagePreview.classList.add('popup_opened');
-        popupImageElement.src = newElement.querySelector('.element__image').src;
-        popupImageTitle.textContent = newElement.querySelector('.element__title').textContent;
-        popupImageElement.alt = newElement.querySelector('.element__title').textContent;
+    elementImage.addEventListener('click', function () {
+        popupImageElement.src = cardLink;
+        popupImageTitle.textContent = cardName;
+        popupImageElement.alt = cardName;
+        openPopup(popupImagePreview);
     });
 
-    //Добавляем новый элемент в начало списка.
-    elements.prepend(newElement);
-
-    //Закрываем попап.
-    closePopupAddEl();
+    return newElement;
 }
 
-//Попап превью изображения элемента.
-// Создаем функцию закрытия попапа превью изображения элемента при клике на кнопку "Закрыть".
-function closePopupImagePreview() {
-    popupImagePreview.classList.remove('popup_opened');
+//Создаем функцию наполнения блока Elements данными из массива или данными из попапа.
+function renderCard(card, container) {
+    container.prepend(card);
+}
+
+//Создаем наполенние блока Elements данными из массива.
+initialCards.forEach(
+    function (item) {
+        //Создаем карточки для каждого элемента массива
+        renderCard(createCard(item.name, item.link), elements);
+    });
+
+//POPUPS
+//Попап редактирования профиля.
+/* Создаем функцию, которая при нажатии на кнопку "Редактировать":
+1. Открывает попап.
+2. Присваиваем значениям строк значения элементов из профиля.
+*/
+function openProfileForm() {
+    popupEditName.value = infoName.textContent;
+    popupEditDescription.value = infoDescription.textContent;
+    openPopup(popupEditProfile);
+}
+
+/* Создаем функцию для сохранения данных в попапе по кнопке "Сохранить", которая:
+1. Присваивает значениям элементов из профиля значения строк из попапа.
+2. Закрывает попап.
+*/
+function submitProfileForm(evt) {
+    evt.preventDefault();
+    infoName.textContent = popupEditName.value;
+    infoDescription.textContent = popupEditDescription.value;
+    closePopup(popupEditProfile);
+
+}
+
+// Создаем функцию закрытия попапа добавления элемента при клике на кнопку "Закрыть".
+function closePopupAddEl() {
+    closePopup(popupAddElement);
+    popupElementLink.value = '';
+    popupElementName.value = '';
+}
+
+//Создаем функцию создания нового эелемента.
+function SubmitAdElForm(evt) {
+    evt.preventDefault();
+
+    //Добавляем новый элемент в список.
+    renderCard(createCard(popupElementName.value, popupElementLink.value), elements);
+
+    //Закрываем попап.
+    closePopup(popupAddElement);
+    popupElementLink.value = '';
+    popupElementName.value = '';
 }
 
 //LISTENERS
-// При нажатии на кнопку "Редактировать" вызываем функцию открытия попапа редактирования профиля.
-buttonOpenProfileEdit.addEventListener('click', formPopupProfileEdit)
+buttonOpenProfileEdit.addEventListener('click', openProfileForm)
 
 // При нажатии на кнопку "Сохранить" вызываем функцию сохранения данных профиля.
-popupForm.addEventListener('submit', formSubmitHandler)
+popopupProfileForm.addEventListener('submit', submitProfileForm)
 
 // При нажатии на кнопку "Закрыть" закрываем попап редактирования профиля.
-buttonCloseEditProfile.addEventListener('click', closePopupEditProfile);
+buttonCloseEditProfile.addEventListener('click', () => closePopup(popupEditProfile));
 
 // При нажатии на кнопку "Добавить" вызываем функцию открытия попапа добавления элемента.
-buttonAddElement.addEventListener('click', formAddElement)
+buttonAddElement.addEventListener('click', () => openPopup(popupAddElement))
 
 // При нажатии на кнопку "Сохранить" вызываем функцию добавления элемента.
-popupFormAdEl.addEventListener('submit', formSubmitHandlerAdEl)
+popupFormAdEl.addEventListener('submit', SubmitAdElForm)
 
 // При нажатии на кнопку "Закрыть" закрываем попап добавления элемента.
 buttonClosePopupAddEl.addEventListener('click', closePopupAddEl);
 
 // При нажатии на кнопку "Закрыть" закрываем попап превью изображения элемента.
-buttonCloseImagePreview.addEventListener('click', closePopupImagePreview);
+buttonCloseImagePreview.addEventListener('click', () => closePopup(popupImagePreview));
