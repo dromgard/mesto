@@ -53,12 +53,18 @@
     <div class="popup popup_type_edit-profile">
         <div class="popup__container">
             <h2 class="popup__title">Редактировать профиль</h2>
-            <form name="info-edit" class="popup__form popup__form_type_edit-profile">
-                <input type="text" placeholder="Название профиля" name="info-name" class="popup__input popup__input_type_name" required>
-                <input type="text" placeholder="Описание профиля" name="info-description" class="popup__input popup__input_type_description" required>
+            <form name="info-edit" class="popup__form popup__form_type_edit-profile" novalidate>
+                <input id="info-input" type="text" placeholder="Название профиля" name="info-name"
+                    class="popup__input popup__input_type_name" minlength="2" maxlength="40" required>
+                <span class="popup__input-error info-input-error"></span>
+
+                <input id="description-input" type="text" placeholder="Описание профиля" name="info-description"
+                    class="popup__input popup__input_type_description" minlength="2" maxlength="200" required>
+                <span class="popup__input-error description-input-error"></span>
                 <button class="popup__save" type="submit" aria-label="Сохранить изменения в профиле">Сохранить</button>
             </form>
-            <button class="popup__close popup__close_type_edit-profile" type="button" aria-label="Закрыть окно редактирования профиля"></button>
+            <button class="popup__close popup__close_type_edit-profile" type="button"
+                aria-label="Закрыть окно редактирования профиля"></button>
         </div>
     </div>
 
@@ -66,11 +72,15 @@
     <div class="popup popup_type_add-element">
         <div class="popup__container">
             <h2 class="popup__title">Новое место</h2>
-            <form name="add-element" class="popup__form popup__form_type_add-element">
-                <input type="text" placeholder="Название" name="info-name"
-                    class="popup__input popup__input_element_name" required>
-                <input type="text" placeholder="Ссылка на картинку" name="info-description"
+            <form name="add-element" class="popup__form popup__form_type_add-element" novalidate>
+                <input id="element-name-input" type="text" placeholder="Название" name="element-name"
+                    class="popup__input popup__input_element_name" minlength="2" maxlength="30" required>
+                    <span class="popup__input-error element-name-input-error"></span>
+
+                <input id="element-link-input" type="url" placeholder="Ссылка на картинку" name="element-link"
                     class="popup__input popup__input_element_link" required>
+                    <span class="popup__input-error element-link-input-error"></span>
+
                 <button class="popup__save" type="submit" aria-label="Создать новый элемент">Создать</button>
             </form>
             <button class="popup__close popup__close_type_add-element" type="button"
@@ -103,6 +113,7 @@
     <!--Подключаем JS-->
     <script src="./scripts/data.js"></script>
     <script src="./scripts/index.js"></script>
+    <script src="./scripts/validate.js"></script>
 </body>
 
 </html>
