@@ -58,20 +58,6 @@ function resetErrorElements() {
     });
 }
 
-//Открытие попапа.
-function openPopup(popup) {
-    popup.classList.add('popup_opened');
-    resetErrorElements();
-    document.addEventListener('keydown', closePopupOnEsc);
-    popup.addEventListener('click', closePopupOnOverlay);
-}
-
-//Закрытие попапа.
-function closePopup(popup) {
-    popup.classList.remove('popup_opened');
-    document.removeEventListener('keydown', closePopupOnEsc);
-}
-
 //Функция закрытия попапа на Esc.
 function closePopupOnEsc(evt) {
     if (evt.code === "Escape") {
@@ -86,6 +72,20 @@ function closePopupOnOverlay(evt) {
         const popup = document.querySelector('.popup_opened');
         closePopup(popup);
     }
+}
+
+//Открытие попапа.
+function openPopup(popup) {
+    popup.classList.add('popup_opened');
+    resetErrorElements();
+    document.addEventListener('keydown', closePopupOnEsc);
+    popup.addEventListener('click', closePopupOnOverlay);
+}
+
+//Закрытие попапа.
+function closePopup(popup) {
+    popup.classList.remove('popup_opened');
+    document.removeEventListener('keydown', closePopupOnEsc);
 }
 
 //ELEMENTS
