@@ -58,25 +58,34 @@ function resetErrorElements() {
     });
 }
 
-//Функция закрытия попапа на Esc.
-function closePopupOnEsc(evt)  {
-    if (evt.code === "KeyQ") {
-        const popup = document.querySelector('.popup_opened');
-        closePopup(popup);
-    }
-}
-
 //Открытие попапа.
 function openPopup(popup) {
     popup.classList.add('popup_opened');
     resetErrorElements();
-    document.addEventListener('keypress', closePopupOnEsc);
+    document.addEventListener('keydown', closePopupOnEsc);
+    popup.addEventListener('click', closePopupOnOverlay);
 }
 
 //Закрытие попапа.
 function closePopup(popup) {
     popup.classList.remove('popup_opened');
-    document.removeEventListener('keypress', closePopupOnEsc);
+    document.removeEventListener('keydown', closePopupOnEsc);
+}
+
+//Функция закрытия попапа на Esc.
+function closePopupOnEsc(evt) {
+    if (evt.code === "Escape") {
+        const popup = document.querySelector('.popup_opened');
+        closePopup(popup);
+    }
+}
+
+//Функция закрытия попапа на Overlay.
+function closePopupOnOverlay(evt) {
+    if (evt.target === evt.currentTarget) {
+        const popup = document.querySelector('.popup_opened');
+        closePopup(popup);
+    }
 }
 
 //ELEMENTS
@@ -187,10 +196,3 @@ buttonClosePopupAddEl.addEventListener('click', closePopupAddEl);
 
 // При нажатии на кнопку "Закрыть" закрываем попап превью изображения элемента.
 buttonCloseImagePreview.addEventListener('click', () => closePopup(popupImagePreview));
-
-
-popupEditProfile.addEventListener('click', function (evt) {
-    if (evt.target === evt.currentTarget) {
-        closePopup(popupEditProfile);
-    };
-});
