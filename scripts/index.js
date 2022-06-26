@@ -125,8 +125,8 @@ function submitProfileForm(evt) {
 // Создаем функцию закрытия попапа добавления элемента при клике на кнопку "Закрыть".
 function closePopupAddEl() {
     closePopup(popupAddElement);
-    popupElementLink.value = '';
-    popupElementName.value = '';
+    // popupElementLink.value = '';
+    // popupElementName.value = '';
 }
 
 //Создаем функцию создания нового эелемента.
