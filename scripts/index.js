@@ -42,15 +42,41 @@ const elementTemplate = document.querySelector('#element').content;
 // Задаем переменной секцию elements - сюда буду добавляться новые элементы.
 const elements = document.querySelector('.elements');
 
+// Задаем переменные для сброса ошибок при неверном вводе в инпуты.
+const errorElements = document.querySelectorAll('.popup__input-error');
+const inputElements = document.querySelectorAll('.popup__input');
+
 //POPUPS
+//Функция сброса ошибок при открытии попапов.
+function resetErrorElements() {
+    errorElements.forEach((errorElement) => {
+        errorElement.textContent = "";
+    });
+
+    inputElements.forEach((inputElement) => {
+        inputElement.classList.remove('popup__input_type_error');
+    });
+}
+
+//Функция закрытия попапа на Esc.
+function closePopupOnEsc(evt)  {
+    if (evt.code === "KeyQ") {
+        const popup = document.querySelector('.popup_opened');
+        closePopup(popup);
+    }
+}
+
 //Открытие попапа.
 function openPopup(popup) {
     popup.classList.add('popup_opened');
+    resetErrorElements();
+    document.addEventListener('keypress', closePopupOnEsc);
 }
 
 //Закрытие попапа.
 function closePopup(popup) {
     popup.classList.remove('popup_opened');
+    document.removeEventListener('keypress', closePopupOnEsc);
 }
 
 //ELEMENTS
@@ -119,14 +145,13 @@ function submitProfileForm(evt) {
     infoName.textContent = popupEditName.value;
     infoDescription.textContent = popupEditDescription.value;
     closePopup(popupEditProfile);
-
 }
 
 // Создаем функцию закрытия попапа добавления элемента при клике на кнопку "Закрыть".
 function closePopupAddEl() {
     closePopup(popupAddElement);
-    // popupElementLink.value = '';
-    // popupElementName.value = '';
+    popupElementLink.value = '';
+    popupElementName.value = '';
 }
 
 //Создаем функцию создания нового эелемента.
@@ -162,3 +187,10 @@ buttonClosePopupAddEl.addEventListener('click', closePopupAddEl);
 
 // При нажатии на кнопку "Закрыть" закрываем попап превью изображения элемента.
 buttonCloseImagePreview.addEventListener('click', () => closePopup(popupImagePreview));
+
+
+popupEditProfile.addEventListener('click', function (evt) {
+    if (evt.target === evt.currentTarget) {
+        closePopup(popupEditProfile);
+    };
+});
