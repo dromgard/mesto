@@ -23,7 +23,7 @@ const isValid = (formElement, inputElement, settings) => {
     }
 };
 
-
+//Функция проверяет валидность полей input и возвращает результат проверки каждого поля.
 const hasInvalidInput = (inputList) => {
     return inputList.some((inputElement) => {
         // Если хотябы одно поле не валидно, колбэк вернёт true.
@@ -33,21 +33,30 @@ const hasInvalidInput = (inputList) => {
     });
 };
 
+// Функция делает кнопку submit активной.
+const submitButtonEnable = (buttonElement, settings) => {
+    buttonElement.classList.remove(settings.inactiveButtonClass);
+    buttonElement.removeAttribute('disabled');
+};
 
+// Функция делает кнопку submit неактивной.
+const submitButtonDisable = (buttonElement, settings) => {
+    buttonElement.classList.add(settings.inactiveButtonClass);
+        buttonElement.setAttribute('disabled', true);
+};
+
+// Функция проверяет корректность заполнения инпутов и меняет состояние кнопки submit.
 const toggleButtonState = (inputList, buttonElement, settings) => {
     // Если есть хотя бы один невалидный инпут
     if (hasInvalidInput(inputList)) {
         // сделай кнопку неактивной
-        buttonElement.classList.add(settings.inactiveButtonClass);
-        buttonElement.setAttribute('disabled', true);
+        submitButtonDisable(buttonElement, settings);
     } else {
         // иначе сделай кнопку активной
-        buttonElement.classList.remove(settings.inactiveButtonClass);
-        buttonElement.removeAttribute('disabled');
+        submitButtonEnable(buttonElement, settings);
     }
 
 };
-
 
 //Функция добавляет слушатели всем полям input.
 const setEventListeners = (formElement, settings) => {
@@ -89,11 +98,15 @@ const enableValidation = (settings) => {
     });
 };
 
-// Вызываем функцию поиска всех попап форм на странице. С нее начинается работа по валидации всех полей input.
-enableValidation({
-    formSelector: '.popup__form',
-    inputSelector: '.popup__input',
-    submitButtonSelector: '.popup__save',
-    inactiveButtonClass: 'popup__save_type_inactive',
-    inputErrorClass: 'popup__input_type_error'
-  });
+//Функция сброса формы и ошибок при открытии попапов.
+function resetForm(settings, form) {
+    form.reset();
+    
+    const inputElements = form.querySelectorAll(settings.inputSelector);
+
+    inputElements.forEach((inputElement) => {
+        inputElement.classList.remove(settings.inputErrorClass);
+        const errorElement = form.querySelector(`.${inputElement.id}-error`);
+        errorElement.textContent = "";
+    });
+};

@@ -1,17 +1,24 @@
 //CONSTANTS
+// Задаем список селекторов внутри формы.
+const configSelectorForm = {
+    formSelector: '.popup__form',
+    inputSelector: '.popup__input',
+    spanSelector: '.popup__input-error',
+    submitButtonSelector: '.popup__save',
+    inactiveButtonClass: 'popup__save_type_inactive',
+    inputErrorClass: 'popup__input_type_error'
+};
+
 // Привязываем константы к значениям элементов открытия попапа редактирования профиля.
 const buttonOpenProfileEdit = document.querySelector('.profile__edit');
 const popupEditProfile = document.querySelector('.popup_type_edit-profile');
-const buttonCloseEditProfile = document.querySelector('.popup__close_type_edit-profile');
 
 // Привязываем константы к значениям элементов открытия попапа добавления элемента.
 const buttonAddElement = document.querySelector('.profile__add-button');
 const popupAddElement = document.querySelector('.popup_type_add-element');
-const buttonClosePopupAddEl = document.querySelector('.popup__close_type_add-element');
 
 // Привязываем константы к значениям элементов открытия попапа превью изображения.
 const popupImagePreview = document.querySelector('.popup_type_image-preview');
-const buttonCloseImagePreview = document.querySelector('.popup__close_type_image-preview');
 const popupImageElement = document.querySelector('.popup__image-preview');
 const popupImageTitle = document.querySelector('.popup__image-title');
 
@@ -42,21 +49,30 @@ const elementTemplate = document.querySelector('#element').content;
 // Задаем переменной секцию elements - сюда буду добавляться новые элементы.
 const elements = document.querySelector('.elements');
 
-// Задаем переменные для сброса ошибок при неверном вводе в инпуты.
-const errorElements = document.querySelectorAll('.popup__input-error');
-const inputElements = document.querySelectorAll('.popup__input');
+// Задаем переменной все попапы на старнице для рабы с закрытием по оверлею и крестику.
+const popups = document.querySelectorAll('.popup')
+
+// Вызываем функцию поиска всех попап форм на странице. С нее начинается работа по валидации всех полей input.
+enableValidation(configSelectorForm);
 
 //POPUPS
-//Функция сброса ошибок при открытии попапов.
-function resetErrorElements() {
-    errorElements.forEach((errorElement) => {
-        errorElement.textContent = "";
-    });
-
-    inputElements.forEach((inputElement) => {
-        inputElement.classList.remove('popup__input_type_error');
-    });
+//Закрытие попапа.
+function closePopup(popup) {
+    popup.classList.remove('popup_opened');
+    document.removeEventListener('keydown', closePopupOnEsc);
 }
+
+//Функция навешивает слушатели на все попапы для закрытия по оверлею и крестику.
+popups.forEach((popup) => {
+    popup.addEventListener('mousedown', (evt) => {
+        if (evt.target.classList.contains('popup_opened')) {
+            closePopup(popup)
+        }
+        if (evt.target.classList.contains('popup__close')) {
+            closePopup(popup)
+        }
+    })
+})
 
 //Функция закрытия попапа на Esc.
 function closePopupOnEsc(evt) {
@@ -66,26 +82,10 @@ function closePopupOnEsc(evt) {
     }
 }
 
-//Функция закрытия попапа на Overlay.
-function closePopupOnOverlay(evt) {
-    if (evt.target === evt.currentTarget) {
-        const popup = document.querySelector('.popup_opened');
-        closePopup(popup);
-    }
-}
-
 //Открытие попапа.
 function openPopup(popup) {
     popup.classList.add('popup_opened');
-    resetErrorElements();
     document.addEventListener('keydown', closePopupOnEsc);
-    popup.addEventListener('click', closePopupOnOverlay);
-}
-
-//Закрытие попапа.
-function closePopup(popup) {
-    popup.classList.remove('popup_opened');
-    document.removeEventListener('keydown', closePopupOnEsc);
 }
 
 //ELEMENTS
@@ -140,9 +140,9 @@ initialCards.forEach(
 2. Присваиваем значениям строк значения элементов из профиля.
 */
 function openProfileForm() {
+    openPopup(popupEditProfile);
     popupEditName.value = infoName.textContent;
     popupEditDescription.value = infoDescription.textContent;
-    openPopup(popupEditProfile);
 }
 
 /* Создаем функцию для сохранения данных в попапе по кнопке "Сохранить", которая:
@@ -156,13 +156,6 @@ function submitProfileForm(evt) {
     closePopup(popupEditProfile);
 }
 
-// Создаем функцию закрытия попапа добавления элемента при клике на кнопку "Закрыть".
-function closePopupAddEl() {
-    closePopup(popupAddElement);
-    popupElementLink.value = '';
-    popupElementName.value = '';
-}
-
 //Создаем функцию создания нового эелемента.
 function SubmitAdElForm(evt) {
     evt.preventDefault();
@@ -172,27 +165,25 @@ function SubmitAdElForm(evt) {
 
     //Закрываем попап.
     closePopup(popupAddElement);
-    popupElementLink.value = '';
-    popupElementName.value = '';
 }
 
 //LISTENERS
-buttonOpenProfileEdit.addEventListener('click', openProfileForm)
+// При нажатии на кнопку "Редактировать" открываем попап редактирования данных профиля.
+buttonOpenProfileEdit.addEventListener('click', () => {
+    resetForm(configSelectorForm, popopupProfileForm);
+    openProfileForm();
+    submitButtonEnable(popopupProfileForm.submit, configSelectorForm);
+})
 
 // При нажатии на кнопку "Сохранить" вызываем функцию сохранения данных профиля.
 popopupProfileForm.addEventListener('submit', submitProfileForm)
 
-// При нажатии на кнопку "Закрыть" закрываем попап редактирования профиля.
-buttonCloseEditProfile.addEventListener('click', () => closePopup(popupEditProfile));
-
 // При нажатии на кнопку "Добавить" вызываем функцию открытия попапа добавления элемента.
-buttonAddElement.addEventListener('click', () => openPopup(popupAddElement))
+buttonAddElement.addEventListener('click', () => {
+    resetForm(configSelectorForm, popupFormAdEl);
+    openPopup(popupAddElement);
+    submitButtonDisable(popupFormAdEl.submit, configSelectorForm);
+})
 
 // При нажатии на кнопку "Сохранить" вызываем функцию добавления элемента.
 popupFormAdEl.addEventListener('submit', SubmitAdElForm)
-
-// При нажатии на кнопку "Закрыть" закрываем попап добавления элемента.
-buttonClosePopupAddEl.addEventListener('click', closePopupAddEl);
-
-// При нажатии на кнопку "Закрыть" закрываем попап превью изображения элемента.
-buttonCloseImagePreview.addEventListener('click', () => closePopup(popupImagePreview));
