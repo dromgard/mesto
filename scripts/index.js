@@ -1,12 +1,12 @@
 //CONSTANTS
 // Задаем список селекторов внутри формы.
 const configSelectorForm = {
-    formSelector: '.popup__form',
-    inputSelector: '.popup__input',
-    spanSelector: '.popup__input-error',
-    submitButtonSelector: '.popup__save',
-    inactiveButtonClass: 'popup__save_type_inactive',
-    inputErrorClass: 'popup__input_type_error'
+  formSelector: '.popup__form',
+  inputSelector: '.popup__input',
+  spanSelector: '.popup__input-error',
+  submitButtonSelector: '.popup__save',
+  inactiveButtonClass: 'popup__save_type_inactive',
+  inputErrorClass: 'popup__input_type_error'
 };
 
 // Привязываем константы к значениям элементов открытия попапа редактирования профиля.
@@ -58,80 +58,80 @@ enableValidation(configSelectorForm);
 //POPUPS
 //Закрытие попапа.
 function closePopup(popup) {
-    popup.classList.remove('popup_opened');
-    document.removeEventListener('keydown', closePopupOnEsc);
+  popup.classList.remove('popup_opened');
+  document.removeEventListener('keydown', closePopupOnEsc);
 }
 
 //Функция навешивает слушатели на все попапы для закрытия по оверлею и крестику.
 popups.forEach((popup) => {
-    popup.addEventListener('mousedown', (evt) => {
-        if (evt.target.classList.contains('popup_opened')) {
-            closePopup(popup)
-        }
-        if (evt.target.classList.contains('popup__close')) {
-            closePopup(popup)
-        }
-    })
+  popup.addEventListener('mousedown', (evt) => {
+    if (evt.target.classList.contains('popup_opened')) {
+      closePopup(popup)
+    }
+    if (evt.target.classList.contains('popup__close')) {
+      closePopup(popup)
+    }
+  })
 })
 
 //Функция закрытия попапа на Esc.
 function closePopupOnEsc(evt) {
-    if (evt.code === "Escape") {
-        const popup = document.querySelector('.popup_opened');
-        closePopup(popup);
-    }
+  if (evt.code === "Escape") {
+    const popup = document.querySelector('.popup_opened');
+    closePopup(popup);
+  }
 }
 
 //Открытие попапа.
 function openPopup(popup) {
-    popup.classList.add('popup_opened');
-    document.addEventListener('keydown', closePopupOnEsc);
+  popup.classList.add('popup_opened');
+  document.addEventListener('keydown', closePopupOnEsc);
 }
 
 //ELEMENTS
 //Создаем функцию создания карточки данными из массива или данными из попапа.
 function createCard(cardName, cardLink) {
-    // Клонируем верстку одного элемента.
-    const newElement = elementTemplate.querySelector('.element').cloneNode(true);
-    const elementImage = newElement.querySelector('.element__image');
+  // Клонируем верстку одного элемента.
+  const newElement = elementTemplate.querySelector('.element').cloneNode(true);
+  const elementImage = newElement.querySelector('.element__image');
 
-    //Присваиваем значениям элементов значения из полей попапа.
-    newElement.querySelector('.element__title').textContent = cardName;
-    elementImage.src = cardLink;
-    elementImage.alt = cardName;
+  //Присваиваем значениям элементов значения из полей попапа.
+  newElement.querySelector('.element__title').textContent = cardName;
+  elementImage.src = cardLink;
+  elementImage.alt = cardName;
 
-    //Проставление лайка.
-    newElement.querySelector('.element__like').addEventListener('click', function (evt) {
-        evt.target.classList.toggle('element__like_active');
-    });
+  //Проставление лайка.
+  newElement.querySelector('.element__like').addEventListener('click', function (evt) {
+    evt.target.classList.toggle('element__like_active');
+  });
 
-    //Удаление элемента.
-    newElement.querySelector('.element__delete').addEventListener('click', function () {
-        newElement.remove();
-    });
+  //Удаление элемента.
+  newElement.querySelector('.element__delete').addEventListener('click', function () {
+    newElement.remove();
+  });
 
-    //Просмотр увеличенного изображения в попапе.
-    elementImage.addEventListener('click', function () {
-        popupImageElement.src = cardLink;
-        popupImageTitle.textContent = cardName;
-        popupImageElement.alt = cardName;
-        openPopup(popupImagePreview);
-    });
+  //Просмотр увеличенного изображения в попапе.
+  elementImage.addEventListener('click', function () {
+    popupImageElement.src = cardLink;
+    popupImageTitle.textContent = cardName;
+    popupImageElement.alt = cardName;
+    openPopup(popupImagePreview);
+  });
 
-    return newElement;
+  return newElement;
 }
 
 //Создаем функцию наполнения блока Elements данными из массива или данными из попапа.
 function renderCard(card, container) {
-    container.prepend(card);
+  container.prepend(card);
 }
 
 //Создаем наполенние блока Elements данными из массива.
 initialCards.forEach(
-    function (item) {
-        //Создаем карточки для каждого элемента массива
-        renderCard(createCard(item.name, item.link), elements);
-    });
+  function (item) {
+    //Создаем карточки для каждого элемента массива
+    renderCard(createCard(item.name, item.link), elements);
+  });
 
 //POPUPS
 //Попап редактирования профиля.
@@ -140,9 +140,9 @@ initialCards.forEach(
 2. Присваиваем значениям строк значения элементов из профиля.
 */
 function openProfileForm() {
-    openPopup(popupEditProfile);
-    popupEditName.value = infoName.textContent;
-    popupEditDescription.value = infoDescription.textContent;
+  openPopup(popupEditProfile);
+  popupEditName.value = infoName.textContent;
+  popupEditDescription.value = infoDescription.textContent;
 }
 
 /* Создаем функцию для сохранения данных в попапе по кнопке "Сохранить", которая:
@@ -150,29 +150,29 @@ function openProfileForm() {
 2. Закрывает попап.
 */
 function submitProfileForm(evt) {
-    evt.preventDefault();
-    infoName.textContent = popupEditName.value;
-    infoDescription.textContent = popupEditDescription.value;
-    closePopup(popupEditProfile);
+  evt.preventDefault();
+  infoName.textContent = popupEditName.value;
+  infoDescription.textContent = popupEditDescription.value;
+  closePopup(popupEditProfile);
 }
 
 //Создаем функцию создания нового эелемента.
 function SubmitAdElForm(evt) {
-    evt.preventDefault();
+  evt.preventDefault();
 
-    //Добавляем новый элемент в список.
-    renderCard(createCard(popupElementName.value, popupElementLink.value), elements);
+  //Добавляем новый элемент в список.
+  renderCard(createCard(popupElementName.value, popupElementLink.value), elements);
 
-    //Закрываем попап.
-    closePopup(popupAddElement);
+  //Закрываем попап.
+  closePopup(popupAddElement);
 }
 
 //LISTENERS
 // При нажатии на кнопку "Редактировать" открываем попап редактирования данных профиля.
 buttonOpenProfileEdit.addEventListener('click', () => {
-    resetForm(configSelectorForm, popopupProfileForm);
-    openProfileForm();
-    submitButtonEnable(popopupProfileForm.submit, configSelectorForm);
+  resetForm(configSelectorForm, popopupProfileForm);
+  openProfileForm();
+  submitButtonEnable(popopupProfileForm.submit, configSelectorForm);
 })
 
 // При нажатии на кнопку "Сохранить" вызываем функцию сохранения данных профиля.
@@ -180,9 +180,9 @@ popopupProfileForm.addEventListener('submit', submitProfileForm)
 
 // При нажатии на кнопку "Добавить" вызываем функцию открытия попапа добавления элемента.
 buttonAddElement.addEventListener('click', () => {
-    resetForm(configSelectorForm, popupFormAdEl);
-    openPopup(popupAddElement);
-    submitButtonDisable(popupFormAdEl.submit, configSelectorForm);
+  resetForm(configSelectorForm, popupFormAdEl);
+  openPopup(popupAddElement);
+  submitButtonDisable(popupFormAdEl.submit, configSelectorForm);
 })
 
 // При нажатии на кнопку "Сохранить" вызываем функцию добавления элемента.
