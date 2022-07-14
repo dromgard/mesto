@@ -1,11 +1,11 @@
 .popup__save_type_inactive {
+  background: #e5e5e5;
+  color: #000;
   opacity: .2;
-  background: #E5E5E5;
-  color: #000000;
 }
 
 .popup__save_type_inactive:hover {
+  background: #e5e5e5;
+  color: #000;
   opacity: .2;
-  background: #E5E5E5;
-  color: #000000;
 }

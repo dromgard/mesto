@@ -1,13 +1,13 @@
 .info__description {
+  overflow: hidden;
   margin: 0;
+  color: #fff;
+  font-size: 18px;
   font-style: normal;
   font-weight: 400;
-  font-size: 18px;
   line-height: 22px;
-  color: #FFFFFF;
   text-overflow: ellipsis;
   white-space: nowrap;
-  overflow: hidden;
 }
 
 @media screen and (max-width: 655px) {

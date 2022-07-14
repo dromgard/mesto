@@ -1,12 +1,12 @@
-@import '../vendor/normalize.css';
+@import url('../vendor/normalize.css');
 
-@import '../vendor/fonts.css';
+@import url('../vendor/fonts.css');
 
-@import '../blocks/page/page.css';
+@import url('../blocks/page/page.css');
 
-@import '../blocks/header/header.css';
+@import url('../blocks/header/header.css');
 
-@import '../blocks/logo/logo.css';
+@import url('../blocks/logo/logo.css');
 
 @import url('../blocks/profile/profile.css');
 

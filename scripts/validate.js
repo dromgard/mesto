@@ -1,4 +1,4 @@
-//Функция добавляет стилизацию и сообщение об ошибке.
+// Функция добавляет стилизацию и сообщение об ошибке.
 const showInputError = (formElement, inputElement, errorMessage, settings) => {
   const errorElement = formElement.querySelector(`.${inputElement.id}-error`);
 
@@ -6,15 +6,15 @@ const showInputError = (formElement, inputElement, errorMessage, settings) => {
   errorElement.textContent = errorMessage;
 };
 
-//Функция удаляет стилизацию и сообщение об ошибке.
+// Функция удаляет стилизацию и сообщение об ошибке.
 const hideInputError = (formElement, inputElement, settings) => {
   const errorElement = formElement.querySelector(`.${inputElement.id}-error`);
 
   inputElement.classList.remove(settings.inputErrorClass);
-  errorElement.textContent = "";
+  errorElement.textContent = '';
 };
 
-//Функция проверяет валидность вводимых данных в input.
+// Функция проверяет валидность вводимых данных в input.
 const isValid = (formElement, inputElement, settings) => {
   if (!inputElement.validity.valid) {
     showInputError(formElement, inputElement, inputElement.validationMessage, settings);
@@ -23,15 +23,11 @@ const isValid = (formElement, inputElement, settings) => {
   }
 };
 
-//Функция проверяет валидность полей input и возвращает результат проверки каждого поля.
-const hasInvalidInput = (inputList) => {
-  return inputList.some((inputElement) => {
-    // Если хотябы одно поле не валидно, колбэк вернёт true.
-    // Обход массива прекратится и вся функция
-    // hasInvalidInput вернёт true.
-    return !inputElement.validity.valid;
-  });
-};
+// Функция проверяет валидность полей input и возвращает результат проверки каждого поля.
+const hasInvalidInput = (inputList) => inputList.some((inputElement) => !inputElement.validity.valid);
+// Если хотябы одно поле не валидно, колбэк вернёт true.
+// Обход массива прекратится и вся функция
+// hasInvalidInput вернёт true.
 
 // Функция делает кнопку submit активной.
 const submitButtonEnable = (buttonElement, settings) => {
@@ -55,10 +51,9 @@ const toggleButtonState = (inputList, buttonElement, settings) => {
     // иначе сделай кнопку активной
     submitButtonEnable(buttonElement, settings);
   }
-
 };
 
-//Функция добавляет слушатели всем полям input.
+// Функция добавляет слушатели всем полям input.
 const setEventListeners = (formElement, settings) => {
   // Находим все поля input внутри каждой найденной формы, делаем из них массив.
   const inputList = Array.from(formElement.querySelectorAll(settings.inputSelector));
@@ -68,37 +63,37 @@ const setEventListeners = (formElement, settings) => {
 
   toggleButtonState(inputList, buttonElement, settings);
 
-  //Для каждого поля input в полученном массиве:
+  // Для каждого поля input в полученном массиве:
   inputList.forEach((inputElement) => {
-    //Добавляем слушатель.
+    // Добавляем слушатель.
     inputElement.addEventListener('input', () => {
-      //Вызываем функцию isValid, передав ей форму и проверяемое поле input.
-      isValid(formElement, inputElement, settings)
+      // Вызываем функцию isValid, передав ей форму и проверяемое поле input.
+      isValid(formElement, inputElement, settings);
 
-      //Вызываем функцию toggleButtonState и передадим ей массив полей и кнопку
+      // Вызываем функцию toggleButtonState и передадим ей массив полей и кнопку
       toggleButtonState(inputList, buttonElement, settings);
     });
   });
 };
 
-//Функция находит все попап формы на странице.
+// Функция находит все попап формы на странице.
 const enableValidation = (settings) => {
-  //Находим все попап формы на странице, делаем из них массив.
+  // Находим все попап формы на странице, делаем из них массив.
   const formList = Array.from(document.querySelectorAll(settings.formSelector));
 
-  //Для каждой формы в полученном массиве:
+  // Для каждой формы в полученном массиве:
   formList.forEach((formElement) => {
     formElement.addEventListener('submit', (evt) => {
-      //Отменяем стандартное поведение.
+      // Отменяем стандартное поведение.
       evt.preventDefault();
     });
 
-    //Вызываем функцию setEventListeners (для добавления слушателей всем полям input), передав ей каждую попап форму.
+    // Вызываем функцию setEventListeners (для добавления слушателей всем полям input), передав ей каждую попап форму.
     setEventListeners(formElement, settings);
   });
 };
 
-//Функция сброса формы и ошибок при открытии попапов.
+// Функция сброса формы и ошибок при открытии попапов.
 function resetForm(settings, form) {
   form.reset();
 
@@ -107,6 +102,6 @@ function resetForm(settings, form) {
   inputElements.forEach((inputElement) => {
     inputElement.classList.remove(settings.inputErrorClass);
     const errorElement = form.querySelector(`.${inputElement.id}-error`);
-    errorElement.textContent = "";
+    errorElement.textContent = '';
   });
-};
+}
