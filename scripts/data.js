@@ -1,6 +1,6 @@
 // CONSTANTS
 // Массив стартовых элементов.
-const initialCards = [
+export const initialCards = [
   {
     name: 'Архыз',
     link: 'images/arkhyz.jpg',

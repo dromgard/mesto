@@ -1,14 +1,9 @@
-// CONSTANTS
-// Задаем список селекторов внутри формы.
-const configSelectorForm = {
-  formSelector: '.popup__form',
-  inputSelector: '.popup__input',
-  spanSelector: '.popup__input-error',
-  submitButtonSelector: '.popup__save',
-  inactiveButtonClass: 'popup__save_type_inactive',
-  inputErrorClass: 'popup__input_type_error',
-};
+import { FormValidator } from './validate.js';
+import { configSelectorForm } from './validateSelectors.js';
+import { initialCards } from './data.js';
+import { Card } from './card.js';
 
+// CONSTANTS
 // Привязываем константы к значениям элементов открытия попапа редактирования профиля.
 const buttonOpenProfileEdit = document.querySelector('.profile__edit');
 const popupEditProfile = document.querySelector('.popup_type_edit-profile');
@@ -17,16 +12,19 @@ const popupEditProfile = document.querySelector('.popup_type_edit-profile');
 const buttonAddElement = document.querySelector('.profile__add-button');
 const popupAddElement = document.querySelector('.popup_type_add-element');
 
-// Привязываем константы к значениям элементов открытия попапа превью изображения.
-const popupImagePreview = document.querySelector('.popup_type_image-preview');
-const popupImageElement = document.querySelector('.popup__image-preview');
-const popupImageTitle = document.querySelector('.popup__image-title');
-
-// Привязываем константу к форме в попапе.
+// Привязываем константу к форме редактирования профиля в попапе.
 const popopupProfileForm = document.querySelector('.popup__form_type_edit-profile');
 
-// Привязываем константу к форме в попапе.
+// Привязываем константу и запускаем проверку валидации формы редактирования профиля.
+const formEditProfile = new FormValidator(configSelectorForm, popopupProfileForm);
+formEditProfile.enableValidation();
+
+// Привязываем константу к форме добавления элемента в попапе.
 const popupFormAdEl = document.querySelector('.popup__form_type_add-element');
+
+// Привязываем константу и запускаем проверку валидации формы добавления элемента.
+const formAddElement = new FormValidator(configSelectorForm, popupFormAdEl);
+formAddElement.enableValidation();
 
 // Задаем переменным значения элементов имени профиля и описания профиля.
 const infoName = document.querySelector('.info__name');
@@ -48,9 +46,6 @@ const elements = document.querySelector('.elements');
 
 // Задаем переменной все попапы на старнице для рабы с закрытием по оверлею и крестику.
 const popups = document.querySelectorAll('.popup');
-
-// Вызываем функцию поиска всех попап форм на странице. С нее начинается работа по валидации всех полей input.
-enableValidation(configSelectorForm);
 
 // POPUPS
 // Закрытие попапа.
@@ -85,59 +80,6 @@ function openPopup(popup) {
   document.addEventListener('keydown', closePopupOnEsc);
 }
 
-///////////////
-
-// Клас создания карточек.
-class Card {
-  constructor(name, link, selector) {
-    this._text = name;
-    this._image = link;
-    this._selector = selector;
-    this._element = this._getTemplate();
-    this._cardImage = this._element.querySelector('.element__image');
-  }
-
-  // Приватный метод возвращает разметку из template.
-  _getTemplate() {
-    const cardElement = this._selector.querySelector('.element').cloneNode(true);
-
-    return cardElement;
-  }
-
-  // Публичный метод наполняет разметку входящими данными.
-  generateCard() {
-    this._setEventListeners();
-
-    this._cardImage.src = this._image;
-    this._cardImage.alt = this._text;
-
-    this._element.querySelector('.element__title').textContent = this._text;
-
-    return this._element;
-  }
-
-  // Приватный метод содержит слушатели новой карточки.
-  _setEventListeners() {
-    // Слушатель проставления лайка.
-    this._element.querySelector('.element__like').addEventListener('click', (evt) => {
-      evt.target.classList.toggle('element__like_active');
-    });
-
-    // Слушатель удаления элемента.
-    this._element.querySelector('.element__delete').addEventListener('click', () => {
-      this._element.remove();
-    });
-
-    // Слушатель просмотра увеличенного изображения в попапе.
-    this._cardImage.addEventListener('click', () => {
-      popupImageElement.src = this._image;
-      popupImageTitle.textContent = this._text;
-      popupImageElement.alt = this._text;
-      openPopup(popupImagePreview);
-    });
-  }
-}
-
 // Создаем функцию наполнения блока Elements готовыми карточками из массива или из попапа.
 function renderCard(card, container) {
   container.prepend(card);
@@ -146,84 +88,10 @@ function renderCard(card, container) {
 // Обходим каждый объект массива, передаем данные объекта в класс создания карточек,
 // Каждой карточке вызываем функцию добавления на страницу.
 initialCards.forEach((item) => {
-
-  const card = new Card(item.name, item.link, elementTemplate);
-
+  const card = new Card(item.name, item.link, elementTemplate, openPopup);
   const cardElement = card.generateCard();
-
   renderCard(cardElement, elements)
-
 });
-
-/////////////////
-
-
-
-
-/////////////****////////////////
-
-//СТАРЫЙ КОД ДОБАВЛЕНИЯ КАРТОЧЕК НА СТАРНИЦУ
-/*
-// ELEMENTS
-// Создаем функцию создания карточки данными из массива или данными из попапа.
-function createCard(cardName, cardLink) {
-
-  // Клонируем верстку одного элемента.
-  const newElement = elementTemplate.querySelector('.element').cloneNode(true);
-  const elementImage = newElement.querySelector('.element__image');
-
-  // Присваиваем значениям элементов значения из полей попапа.
-  newElement.querySelector('.element__title').textContent = cardName;
-  elementImage.src = cardLink;
-  elementImage.alt = cardName;
-
-  // Проставление лайка.
-  newElement.querySelector('.element__like').addEventListener('click', (evt) => {
-    evt.target.classList.toggle('element__like_active');
-  });
-
-  // Удаление элемента.
-  newElement.querySelector('.element__delete').addEventListener('click', () => {
-    newElement.remove();
-  });
-
-  // Просмотр увеличенного изображения в попапе.
-  elementImage.addEventListener('click', () => {
-    popupImageElement.src = cardLink;
-    popupImageTitle.textContent = cardName;
-    popupImageElement.alt = cardName;
-    openPopup(popupImagePreview);
-  });
-  
-    return newElement;
-    
-}
-
-// Создаем функцию наполнения блока Elements данными из массива или данными из попапа.
-function renderCard(card, container) {
-  container.prepend(card);
-}
-
-// Создаем наполенние блока Elements данными из массива.
-initialCards.forEach(
-  (item) => {
-    // Создаем карточки для каждого элемента массива
-    renderCard(
-      createCard(
-        item.name,
-        item.link,
-      ),
-      elements,
-    );
-  },
-);
-*/
-/////////////****////////////////
-
-
-
-
-
 
 // POPUPS
 // Попап редактирования профиля.
@@ -252,8 +120,8 @@ function submitProfileForm(evt) {
 function SubmitAdElForm(evt) {
   evt.preventDefault();
 
-// Передаем данные из попапа в класс создания карточек, вызываем функцию добавления на страницу.
-  const card = new Card(popupElementName.value, popupElementLink.value, elementTemplate);
+  // Передаем данные из попапа в класс создания карточек, вызываем функцию добавления на страницу.
+  const card = new Card(popupElementName.value, popupElementLink.value, elementTemplate, openPopup);
 
   const cardElement = card.generateCard();
 
@@ -264,21 +132,27 @@ function SubmitAdElForm(evt) {
 }
 
 // LISTENERS
-// При нажатии на кнопку "Редактировать" открываем попап редактирования данных профиля.
+// При нажатии на кнопку "Редактировать":
+// 1. Сбрасываем форму 
+// 2. Открываем попап редактирования данных профиля.
+// 3. Активируем кнопку "submit";
 buttonOpenProfileEdit.addEventListener('click', () => {
-  resetForm(configSelectorForm, popopupProfileForm);
+  formEditProfile.resetForm();
   openProfileForm();
-  submitButtonEnable(popopupProfileForm.submit, configSelectorForm);
+  formEditProfile.submitButtonEnable(popopupProfileForm.querySelector(configSelectorForm.submitButtonSelector));
 });
 
 // При нажатии на кнопку "Сохранить" вызываем функцию сохранения данных профиля.
 popopupProfileForm.addEventListener('submit', submitProfileForm);
 
-// При нажатии на кнопку "Добавить" вызываем функцию открытия попапа добавления элемента.
+// При нажатии на кнопку "Добавить":
+// 1. Сбрасываем форму 
+// 2. Открываем попап добавления элемента.
+// 3. Деактивируем кнопку "submit";
 buttonAddElement.addEventListener('click', () => {
-  resetForm(configSelectorForm, popupFormAdEl);
+  formAddElement.resetForm();
   openPopup(popupAddElement);
-  submitButtonDisable(popupFormAdEl.submit, configSelectorForm);
+  formAddElement.submitButtonDisable(popupFormAdEl.querySelector(configSelectorForm.submitButtonSelector));
 });
 
 // При нажатии на кнопку "Сохранить" вызываем функцию добавления элемента.
