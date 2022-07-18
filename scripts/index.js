@@ -1,7 +1,7 @@
 import { FormValidator } from './FormValidator.js';
 import { configSelectorForm } from './validateSelectors.js';
 import { initialCards } from './data.js';
-import { Card } from './Cards.js';
+import { Card } from './Card.js';
 
 // CONSTANTS
 // Привязываем константы к значениям элементов открытия попапа редактирования профиля.
