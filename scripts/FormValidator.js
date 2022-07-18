@@ -2,6 +2,8 @@ export class FormValidator {
   constructor(settings, formElement) {
     this._settings = settings;
     this._formElement = formElement;
+    this._inputList = Array.from(this._formElement.querySelectorAll(this._settings.inputSelector));
+    this._buttonElement = this._formElement.querySelector(this._settings.submitButtonSelector);
   }
 
   // Функция добавляет стилизацию и сообщение об ошибке.
@@ -30,8 +32,8 @@ export class FormValidator {
   };
 
   //Функция проверяет валидность полей input и возвращает результат проверки каждого поля.
-  _hasInvalidInput(inputList) {
-    return inputList.some((inputElement) => {
+  _hasInvalidInput() {
+    return this._inputList.some((inputElement) => {
       // Если хотябы одно поле не валидно, колбэк вернёт true.
       // Обход массива прекратится и вся функция
       // hasInvalidInput вернёт true.
@@ -40,48 +42,42 @@ export class FormValidator {
   };
 
   // Функция делает кнопку submit активной.
-  submitButtonEnable(buttonElement) {
-    buttonElement.classList.remove(this._settings.inactiveButtonClass);
-    buttonElement.removeAttribute('disabled');
+  enableSubmitButton() {
+    this._buttonElement.classList.remove(this._settings.inactiveButtonClass);
+    this._buttonElement.removeAttribute('disabled');
   };
 
   // Функция делает кнопку submit неактивной.
-  submitButtonDisable(buttonElement) {
-    buttonElement.classList.add(this._settings.inactiveButtonClass);
-    buttonElement.setAttribute('disabled', true);
+  disableSubmitButton() {
+    this._buttonElement.classList.add(this._settings.inactiveButtonClass);
+    this._buttonElement.setAttribute('disabled', true);
   };
 
   // Функция проверяет корректность заполнения инпутов и меняет состояние кнопки submit.
-  _toggleButtonState(inputList, buttonElement) {
+  _toggleButtonState() {
     // Если есть хотя бы один невалидный инпут
-    if (this._hasInvalidInput(inputList)) {
+    if (this._hasInvalidInput()) {
       // сделай кнопку неактивной
-      this.submitButtonDisable(buttonElement);
+      this.disableSubmitButton(this._buttonElement);
     } else {
       // иначе сделай кнопку активной
-      this.submitButtonEnable(buttonElement);
+      this.enableSubmitButton(this._buttonElement);
     }
   };
 
   // Функция добавляет слушатели всем полям input.
   _setEventListeners() {
-    // Находим все поля input внутри каждой найденной формы, делаем из них массив.
-    const inputList = Array.from(this._formElement.querySelectorAll(this._settings.inputSelector));
-
-    // Находим в текущей форме кнопку отправки
-    const buttonElement = this._formElement.querySelector(this._settings.submitButtonSelector);
-
-    this._toggleButtonState(inputList, buttonElement);
+    this._toggleButtonState();
 
     // Для каждого поля input в полученном массиве:
-    inputList.forEach((inputElement) => {
+    this._inputList.forEach((inputElement) => {
       // Добавляем слушатель.
       inputElement.addEventListener('input', () => {
-        // Вызываем функцию isValid, передав ей форму и проверяемое поле input.
+        // Вызываем функцию isValid, передав ей проверяемое поле input.
         this._isValid(inputElement);
 
-        // Вызываем функцию toggleButtonState и передадим ей массив полей и кнопку
-        this._toggleButtonState(inputList, buttonElement);
+        // Вызываем функцию toggleButtonState для переключения кнопки.
+        this._toggleButtonState();
       });
     });
   };
@@ -96,20 +92,20 @@ export class FormValidator {
 
     // Вызываем функцию setEventListeners (для добавления слушателей всем полям input), передав ей каждую попап форму.
     this._setEventListeners();
-
   };
+
+  // Функция интеллектуально переключает кнопку в попапе при его открытии и очищает список ошибок.
+  resetValidation() {
+    this._toggleButtonState();
+
+    this._inputList.forEach((inputElement) => {
+      this._hideInputError(inputElement)
+    });
+  }
 
   // Функция сброса формы и ошибок при открытии попапов.
   resetForm() {
     this._formElement.reset();
-
-    const inputElements = this._formElement.querySelectorAll(this._settings.inputSelector);
-
-    inputElements.forEach((inputElement) => {
-      inputElement.classList.remove(this._settings.inputErrorClass);
-      const errorElement = this._formElement.querySelector(`.${inputElement.id}-error`);
-      errorElement.textContent = '';
-    });
   }
 
 }

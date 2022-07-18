@@ -1,7 +1,7 @@
-import { FormValidator } from './validate.js';
+import { FormValidator } from './FormValidator.js';
 import { configSelectorForm } from './validateSelectors.js';
 import { initialCards } from './data.js';
-import { Card } from './card.js';
+import { Card } from './Card.js';
 
 // CONSTANTS
 // Привязываем константы к значениям элементов открытия попапа редактирования профиля.
@@ -37,6 +37,12 @@ const popupEditDescription = document.querySelector('.popup__input_type_descript
 // Задаем переменным значения строки имени и ссылки в попапе добавления нового элемента.
 const popupElementName = document.querySelector('.popup__input_element_name');
 const popupElementLink = document.querySelector('.popup__input_element_link');
+
+// Привязываем константы к значениям элементов открытия попапа превью изображения.
+const popupImagePreview = document.querySelector('.popup_type_image-preview');
+const popupImageElement = document.querySelector('.popup__image-preview');
+const popupImageTitle = document.querySelector('.popup__image-title');
+
 
 // Задаем переменной шаблон Template.
 const elementTemplate = document.querySelector('#element').content;
@@ -74,6 +80,14 @@ function closePopupOnEsc(evt) {
   }
 }
 
+// Функция обработчик клика по картинке элемента.
+function handleCardClick(name, link) {
+  popupImageElement.src = link;
+  popupImageTitle.textContent = name;
+  popupImageElement.alt = name;
+  openPopup(popupImagePreview);
+}
+
 // Открытие попапа.
 function openPopup(popup) {
   popup.classList.add('popup_opened');
@@ -85,12 +99,20 @@ function renderCard(card, container) {
   container.prepend(card);
 }
 
-// Обходим каждый объект массива, передаем данные объекта в класс создания карточек,
+// Функция создания карточки из класса.
+function createCard(name, link) {
+  const card = new Card(name, link, elementTemplate, handleCardClick);
+  const cardElement = card.generateCard();
+  return cardElement;
+}
+
+// Обходим каждый объект массива, передаем данные объекта в функцию создания карточек,
 // Каждой карточке вызываем функцию добавления на страницу.
 initialCards.forEach((item) => {
-  const card = new Card(item.name, item.link, elementTemplate, openPopup);
-  const cardElement = card.generateCard();
-  renderCard(cardElement, elements)
+  //const card = new Card(item.name, item.link, elementTemplate, handleCardClick);
+  //const cardElement = card.generateCard();
+  const cardElement = createCard(item.name, item.link);
+  renderCard(cardElement, elements);
 });
 
 // POPUPS
@@ -117,14 +139,13 @@ function submitProfileForm(evt) {
 }
 
 // Создаем функцию создания нового эелемента.
-function SubmitAdElForm(evt) {
+function submitAdElForm(evt) {
   evt.preventDefault();
 
-  // Передаем данные из попапа в класс создания карточек, вызываем функцию добавления на страницу.
-  const card = new Card(popupElementName.value, popupElementLink.value, elementTemplate, openPopup);
+  // Передаем данные из попапа в функцию создания карточек.
+  const cardElement = createCard(popupElementName.value, popupElementLink.value);
 
-  const cardElement = card.generateCard();
-
+  // Вызываем функцию добавления на страницу
   renderCard(cardElement, elements);
 
   // Закрываем попап.
@@ -139,7 +160,7 @@ function SubmitAdElForm(evt) {
 buttonOpenProfileEdit.addEventListener('click', () => {
   formEditProfile.resetForm();
   openProfileForm();
-  formEditProfile.submitButtonEnable(popopupProfileForm.querySelector(configSelectorForm.submitButtonSelector));
+  formEditProfile.resetValidation();
 });
 
 // При нажатии на кнопку "Сохранить" вызываем функцию сохранения данных профиля.
@@ -152,8 +173,8 @@ popopupProfileForm.addEventListener('submit', submitProfileForm);
 buttonAddElement.addEventListener('click', () => {
   formAddElement.resetForm();
   openPopup(popupAddElement);
-  formAddElement.submitButtonDisable(popupFormAdEl.querySelector(configSelectorForm.submitButtonSelector));
+  formAddElement.resetValidation();
 });
 
 // При нажатии на кнопку "Сохранить" вызываем функцию добавления элемента.
-popupFormAdEl.addEventListener('submit', SubmitAdElForm);
+popupFormAdEl.addEventListener('submit', submitAdElForm);
