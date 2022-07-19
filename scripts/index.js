@@ -158,7 +158,6 @@ function submitAdElForm(evt) {
 // 2. Открываем попап редактирования данных профиля.
 // 3. Активируем кнопку "submit";
 buttonOpenProfileEdit.addEventListener('click', () => {
-  formEditProfile.resetForm();
   openProfileForm();
   formEditProfile.resetValidation();
 });

@@ -18,9 +18,7 @@ export class Card {
 
   // Публичный метод наполняет разметку входящими данными.
   generateCard() {
-    this._toggleLike();
-    this._deleteCard();
-    this._handleImageClick();
+    this._setEventListeners();
 
     this._cardImage.src = this._image;
     this._cardImage.alt = this._text;
@@ -30,24 +28,34 @@ export class Card {
     return this._element;
   }
 
-// Слушатель проставления лайка.
-  _toggleLike() {
-    this._element.querySelector('.element__like').addEventListener('click', (evt) => {
-      evt.target.classList.toggle('element__like_active');
-    });
+  // Проставление лайка.
+  _toggleLike(evt) {
+    evt.target.classList.toggle('element__like_active');
   }
 
-// Слушатель удаления элемента.
+  // Удаление элемента.
   _deleteCard() {
+    this._element.remove();
+  }
+
+  // Открытие попапа с превью изображения.
+  _handleImageClick() {
+    this._handleCardClick(this._text, this._image)
+  }
+
+  // Навешиваем слушатели.
+  _setEventListeners() {
+    this._element.querySelector('.element__like').addEventListener('click', (evt) => {
+      this._toggleLike(evt);
+    });
+
     this._element.querySelector('.element__delete').addEventListener('click', () => {
-      this._element.remove();
+      this._deleteCard();
+    });
+
+    this._cardImage.addEventListener('click', () => {
+      this._handleImageClick();
     });
   }
 
-// Слушатель открытия попапа с превью изображения.
-  _handleImageClick() {
-    this._cardImage.addEventListener('click', () => {
-      this._handleCardClick(this._text, this._image)
-    });
-  }
 }
