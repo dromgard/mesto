@@ -1,32 +1,33 @@
-import { initialCards } from '../scripts/data.js';
-import { Card } from '../scripts/Card.js';
+import { Card } from '../components/Card.js';
 import { Section } from '../components/Section.js';
-import { Popup } from '../components/Popup.js';
 import { PopupWithImage } from '../components/PopupWithImage.js';
+import { PopupWithForm } from '../components/PopupWithForm.js';
+import { UserInfo } from '../components/UserInfo.js';
+import { FormValidator } from '../components/FormValidator.js';
 import {
+  initialCards,
   buttonOpenProfileEdit,
   popupEditProfile,
   buttonAddElement,
   popupAddElement,
-  popopupProfileForm,
-  formEditProfile,
-  popupFormAdEl,
-  formAddElement,
-  infoName,
-  infoDescription,
   popupEditName,
   popupEditDescription,
-  popupElementName,
-  popupElementLink,
   popupImagePreview,
   elementTemplate,
   elements,
-  //popups
+  profileInfo,
+  configSelectorForm,
+  popupProfileForm,
+  popupFormAddElement
 } from '../utils/constants.js';
 
-// Включаем валидацию форм.
-formEditProfile.enableValidation();
-formAddElement.enableValidation();
+// Включаем валидацию формы редактирования профиля.
+const formEditProfileValid = new FormValidator(configSelectorForm, popupProfileForm);
+formEditProfileValid.enableValidation();
+
+// Включаем валидацию формы добавления элемента.
+const formAddElementValid = new FormValidator(configSelectorForm, popupFormAddElement);
+formAddElementValid.enableValidation();
 
 // Передаем в класс Section данные для создания и добавления карточек на старницу.
 const defaultCardList = new Section(
@@ -40,9 +41,11 @@ const defaultCardList = new Section(
       elementTemplate,
       handleCardClick
     );
+    
+    // Вызываем публичный метод генерации карточки.
     const cardElement = card.generateCard();
 
-    // Добавляем сгенерированную карточку на страницу.
+    // Вызываем публичный метод добавления карточки на страницу.
     defaultCardList.addItem(cardElement);
   },
   elements
@@ -51,131 +54,64 @@ const defaultCardList = new Section(
 // Запускаем метод для добавления карточек на страницу.
 defaultCardList.renderItems();
 
+// Создаем экземпляр попапа редактирования профиля.
+const FormPopupProfile = new PopupWithForm(popupEditProfile, submitProfileForm);
+FormPopupProfile.setEventListeners();
+
+// Создаем экземпляр попапа добавления нового элемента.
+const FormPopupAddElement = new PopupWithForm(popupAddElement, submitAdElForm);
+FormPopupAddElement.setEventListeners();
 
 // Функция создания новой карточки.
-function submitAdElForm(evt) {
-  evt.preventDefault();
-
+function submitAdElForm(obj) {
   const card = new Card(
-    popupElementName.value,
-    popupElementLink.value,
+    obj.name,
+    obj.link,
     elementTemplate,
     handleCardClick
   );
+  
+  // Вызываем публичный метод генерации карточки.
   const cardElement = card.generateCard();
 
-  // Вызываем публичный метод добавления карточки на страницу
+  // Вызываем публичный метод добавления карточки на страницу.
   defaultCardList.addItem(cardElement);
 
   // Закрываем попап.
-  //closePopup(popupAddElement);
-  const popupAddEl = new Popup(popupAddElement);
-  popupAddEl.close();
+  FormPopupAddElement.close();
 }
 
+ // Создаем экземпляр класса редактирования данных профиля на странице. 
+const userInfo = new UserInfo(profileInfo);
 
-// POPUPS
-// Закрытие попапа.
-/*function closePopup(popup) {
-  const closePopup = new Popup(popup);
-  closePopup.close();
-}*/
+// Функция открывает попап редактирования профиля и проставляет имя и описание в инпуты.
+function openProfileForm() {
+  popupEditName.value = userInfo.getUserInfo().name.textContent;
+  popupEditDescription.value = userInfo.getUserInfo().description.textContent;
+  FormPopupProfile.open();
+}
 
-// Функция навешивает слушатели на все попапы для закрытия по оверлею и крестику.
-/*popups.forEach((popup) => {
-  
-  
-  popup.addEventListener('mousedown', (evt) => {
-    if (evt.target.classList.contains('popup_opened')) {
-      closePopup(popup);
-    }
-    if (evt.target.classList.contains('popup__close')) {
-      closePopup(popup);
-    }
-  });
-});*/
-
-/*
-// Функция закрытия попапа на Esc.
-function closePopupOnEsc(evt) {
-  if (evt.code === 'Escape') {
-    const popup = document.querySelector('.popup_opened');
-    closePopup(popup);
-  }
-}*/
+// Функция сохраняет данные инпутов в провиль и закрывает попап.
+function submitProfileForm(obj) {
+  userInfo.setUserInfo(obj.name, obj.description);
+  FormPopupProfile.close();
+}
 
 // Функция обработчик клика по картинке элемента.
 function handleCardClick(name, link) {
   const previeImage = new PopupWithImage(popupImagePreview)
   previeImage.open(name, link);
-  previeImage.setEventListeners();
-  /*popupImageElement.src = link;
-  popupImageTitle.textContent = name;
-  popupImageElement.alt = name;
-  const popupImage = new Popup(popupImagePreview);
-  popupImage.open();
-  popupImage.setEventListeners();
-  //openPopup(popupImagePreview);*/
-}
-
-/*// Открытие попапа.
-function openPopup(popup) {
-  popup.classList.add('popup_opened');
-  document.addEventListener('keydown', closePopupOnEsc);
-}*/
-
-// POPUPS
-// Попап редактирования профиля.
-/* Создаем функцию, которая при нажатии на кнопку "Редактировать":
-1. Открывает попап.
-2. Присваиваем значениям строк значения элементов из профиля.
-*/
-function openProfileForm() {
-  const popupProfileForm = new Popup(popupEditProfile);
-  popupProfileForm.open();
-  popupEditName.value = infoName.textContent;
-  popupEditDescription.value = infoDescription.textContent;
-  popupProfileForm.setEventListeners();
-}
-
-/* Создаем функцию для сохранения данных в попапе по кнопке "Сохранить", которая:
-1. Присваивает значениям элементов из профиля значения строк из попапа.
-2. Закрывает попап.
-*/
-function submitProfileForm(evt) {
-  evt.preventDefault();
-  infoName.textContent = popupEditName.value;
-  infoDescription.textContent = popupEditDescription.value;
-  const popupProfileForm = new Popup(popupEditProfile);
-  popupProfileForm.close();
-  //closePopup(popupEditProfile);
 }
 
 // LISTENERS
-// При нажатии на кнопку "Редактировать":
-// 1. Сбрасываем форму 
-// 2. Открываем попап редактирования данных профиля.
-// 3. Активируем кнопку "submit";
+// При нажатии на кнопку "Редактировать" открываем попап редактирования данных профиля.
 buttonOpenProfileEdit.addEventListener('click', () => {
   openProfileForm();
-  formEditProfile.resetValidation();
+  formEditProfileValid.resetValidation();
 });
 
-// При нажатии на кнопку "Сохранить" вызываем функцию сохранения данных профиля.
-popopupProfileForm.addEventListener('submit', submitProfileForm);
-
-// При нажатии на кнопку "Добавить":
-// 1. Сбрасываем форму 
-// 2. Открываем попап добавления элемента.
-// 3. Деактивируем кнопку "submit";
+// При нажатии на кнопку "Добавить карточку на страницу" открываем попап добавления элемента.
 buttonAddElement.addEventListener('click', () => {
-  formAddElement.resetForm();
-  const popupAddEl = new Popup(popupAddElement);
-  popupAddEl.open();
-  //openPopup(popupAddElement);
-  formAddElement.resetValidation();
-  popupAddEl.setEventListeners();
+  FormPopupAddElement.open();
+  formAddElementValid.resetValidation();
 });
-
-// При нажатии на кнопку "Сохранить" вызываем функцию добавления элемента.
-popupFormAdEl.addEventListener('submit', submitAdElForm);

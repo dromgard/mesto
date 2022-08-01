@@ -106,6 +106,7 @@ export class FormValidator {
   // Функция сброса формы и ошибок при открытии попапов.
   resetForm() {
     this._formElement.reset();
+    console.log(1);
   }
 
 }

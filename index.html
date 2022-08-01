@@ -54,11 +54,11 @@
     <div class="popup__container">
       <h2 class="popup__title">Редактировать профиль</h2>
       <form name="info-edit" class="popup__form popup__form_type_edit-profile" novalidate>
-        <input id="info-input" type="text" placeholder="Название профиля" name="info-name"
+        <input id="info-input" type="text" placeholder="Название профиля" name="name"
           class="popup__input popup__input_type_name" minlength="2" maxlength="40" required>
         <span class="popup__input-error info-input-error"></span>
 
-        <input id="description-input" type="text" placeholder="Описание профиля" name="info-description"
+        <input id="description-input" type="text" placeholder="Описание профиля" name="description"
           class="popup__input popup__input_type_description" minlength="2" maxlength="200" required>
         <span class="popup__input-error description-input-error"></span>
         <button name="submit" class="popup__save" type="submit"
@@ -74,11 +74,11 @@
     <div class="popup__container">
       <h2 class="popup__title">Новое место</h2>
       <form name="add-element" class="popup__form popup__form_type_add-element" novalidate>
-        <input id="element-name-input" type="text" placeholder="Название" name="element-name"
+        <input id="element-name-input" type="text" placeholder="Название" name="name"
           class="popup__input popup__input_element_name" minlength="2" maxlength="30" required>
         <span class="popup__input-error element-name-input-error"></span>
 
-        <input id="element-link-input" type="url" placeholder="Ссылка на картинку" name="element-link"
+        <input id="element-link-input" type="url" placeholder="Ссылка на картинку" name="link"
           class="popup__input popup__input_element_link" required>
         <span class="popup__input-error element-link-input-error"></span>
 
@@ -112,10 +112,6 @@
   </template>
 
   <!--Подключаем JS-->
-  <!--<script type="module" src="./scripts/Card.js"></script>
-  <script type="module" src="./scripts/data.js"></script>
-  <script type="module" src="./scripts/FormValidator.js"></script>
-  <script type="module" src="./scripts/validateSelectors.js"></script>-->
   <script type="module" src="./pages/index.js"></script>
 </body>
 
