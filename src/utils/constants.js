@@ -1,28 +1,35 @@
+import arkhyz from '../images/arkhyz.jpg';
+import chelyabinsk from '../images/chelyabinsk-oblast.jpg';
+import ivanovo from '../images/ivanovo.jpg';
+import kamchatka from '../images/kamchatka.jpg';
+import kholmogorsky from '../images/kholmogorsky-rayon.jpg';
+import baikal from '../images/baikal.jpg';
+
 // Массив для создания стартовых карточек.
 export const initialCards = [
   {
     name: 'Архыз',
-    link: 'images/arkhyz.jpg',
+    link: arkhyz,
   },
   {
     name: 'Челябинская область',
-    link: 'images/chelyabinsk-oblast.jpg',
+    link: chelyabinsk,
   },
   {
     name: 'Иваново',
-    link: 'images/ivanovo.jpg',
+    link: ivanovo,
   },
   {
     name: 'Камчатка',
-    link: 'images/kamchatka.jpg',
+    link: kamchatka,
   },
   {
     name: 'Холмогорский район',
-    link: 'images/kholmogorsky-rayon.jpg',
+    link: kholmogorsky,
   },
   {
     name: 'Байкал',
-    link: 'images/baikal.jpg',
+    link: baikal,
   },
 ];
 
