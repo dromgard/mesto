@@ -36,6 +36,7 @@ export class Card {
   // Удаление элемента.
   _deleteCard() {
     this._element.remove();
+    this._element = null;
   }
 
   // Открытие попапа с превью изображения.

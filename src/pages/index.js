@@ -30,24 +30,25 @@ formEditProfileValid.enableValidation();
 const formAddElementValid = new FormValidator(configSelectorForm, popupFormAddElement);
 formAddElementValid.enableValidation();
 
-// Передаем в класс Section данные для создания и добавления карточек на старницу.
+// Функция создания карточки из класса.
+function createCard(name, link) {
+  const card = new Card(name, link, elementTemplate, handleCardClick);
+
+  // Вызываем публичный метод генерации карточки.
+  const cardElement = card.generateCard();
+  
+  // Вызываем публичный метод добавления карточки на страницу.
+  defaultCardList.addItem(cardElement);
+}
+
+// Передаем в класс Section данные для создания и добавления карточек на страницу.
 const defaultCardList = new Section(
   initialCards,
 
   // Колбеком передаем функцию генерации карточки в классе Card.
   (cardItem) => {
-    const card = new Card(
-      cardItem.name,
-      cardItem.link,
-      elementTemplate,
-      handleCardClick
-    );
-    
-    // Вызываем публичный метод генерации карточки.
-    const cardElement = card.generateCard();
-
-    // Вызываем публичный метод добавления карточки на страницу.
-    defaultCardList.addItem(cardElement);
+    // Запускаем функцию создания карточки
+    createCard(cardItem.name, cardItem.link)
   },
   elements
 );
@@ -56,51 +57,45 @@ const defaultCardList = new Section(
 defaultCardList.renderItems();
 
 // Создаем экземпляр попапа редактирования профиля.
-const FormPopupProfile = new PopupWithForm(popupEditProfile, submitProfileForm);
-FormPopupProfile.setEventListeners();
+const formPopupProfile = new PopupWithForm(popupEditProfile, submitProfileForm);
+formPopupProfile.setEventListeners();
 
 // Создаем экземпляр попапа добавления нового элемента.
-const FormPopupAddElement = new PopupWithForm(popupAddElement, submitAdElForm);
-FormPopupAddElement.setEventListeners();
+const formPopupAddElement = new PopupWithForm(popupAddElement, submitAddElementForm);
+formPopupAddElement.setEventListeners();
 
 // Функция создания новой карточки.
-function submitAdElForm(obj) {
-  const card = new Card(
-    obj.name,
-    obj.link,
-    elementTemplate,
-    handleCardClick
-  );
+function submitAddElementForm(obj) {
   
-  // Вызываем публичный метод генерации карточки.
-  const cardElement = card.generateCard();
-
-  // Вызываем публичный метод добавления карточки на страницу.
-  defaultCardList.addItem(cardElement);
-
+  // Запускаем функцию создания карточки
+  createCard(obj.name, obj.link)
+  
   // Закрываем попап.
-  FormPopupAddElement.close();
+  formPopupAddElement.close();
 }
 
- // Создаем экземпляр класса редактирования данных профиля на странице. 
+// Создаем экземпляр класса редактирования данных профиля на странице. 
 const userInfo = new UserInfo(profileInfo);
 
 // Функция открывает попап редактирования профиля и проставляет имя и описание в инпуты.
 function openProfileForm() {
-  popupEditName.value = userInfo.getUserInfo().name.textContent;
-  popupEditDescription.value = userInfo.getUserInfo().description.textContent;
-  FormPopupProfile.open();
+  const { name, description } = userInfo.getUserInfo();
+  popupEditName.value = name;
+  popupEditDescription.value = description;
+  formPopupProfile.open();
 }
 
 // Функция сохраняет данные инпутов в провиль и закрывает попап.
 function submitProfileForm(obj) {
   userInfo.setUserInfo(obj.name, obj.description);
-  FormPopupProfile.close();
+  formPopupProfile.close();
 }
+
+// Создаем экземпляр класса просмотра увеличенного изображения в попапе.
+const previeImage = new PopupWithImage(popupImagePreview)
 
 // Функция обработчик клика по картинке элемента.
 function handleCardClick(name, link) {
-  const previeImage = new PopupWithImage(popupImagePreview)
   previeImage.open(name, link);
 }
 
@@ -113,6 +108,6 @@ buttonOpenProfileEdit.addEventListener('click', () => {
 
 // При нажатии на кнопку "Добавить карточку на страницу" открываем попап добавления элемента.
 buttonAddElement.addEventListener('click', () => {
-  FormPopupAddElement.open();
+  formPopupAddElement.open();
   formAddElementValid.resetValidation();
 });
