@@ -48,7 +48,7 @@ const defaultCardList = new Section(
   // Колбеком передаем функцию генерации карточки в классе Card.
   (cardItem) => {
     // Запускаем функцию создания карточки и добавления на страницу.
-    defaultCardList.addItem(createCard(cardItem.name, cardItem.link))
+    defaultCardList.addItem(createCard(cardItem.name, cardItem.link));
   },
   elements
 );
