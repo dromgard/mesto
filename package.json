@@ -2,7 +2,7 @@
   "name": "mesto",
   "version": "1.0.0",
   "description": "Проект позволяет вести свой профиль в интернете: загружать данные о себе (Аватар, имя, описание), загружать фотографии интересных событий из жизни. На текущем этапе реализован функционал изменения данных о себе - имени и описания.",
-  "main": "index.js",
+  "main": "src/main.js",
   "dependencies": {
     "core-js": "^3.24.1"
   },
@@ -23,7 +23,7 @@
   },
   "scripts": {
     "build": "webpack --mode production",
-    "dev": "webpack serve"
+    "dev": "webpack serve --mode development --open"
   },
   "repository": {
     "type": "git",

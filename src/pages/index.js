@@ -37,8 +37,8 @@ function createCard(name, link) {
   // Вызываем публичный метод генерации карточки.
   const cardElement = card.generateCard();
   
-  // Вызываем публичный метод добавления карточки на страницу.
-  defaultCardList.addItem(cardElement);
+  // Возвращаем готовую карточку.
+  return cardElement;
 }
 
 // Передаем в класс Section данные для создания и добавления карточек на страницу.
@@ -47,8 +47,8 @@ const defaultCardList = new Section(
 
   // Колбеком передаем функцию генерации карточки в классе Card.
   (cardItem) => {
-    // Запускаем функцию создания карточки
-    createCard(cardItem.name, cardItem.link)
+    // Запускаем функцию создания карточки и добавления на страницу.
+    defaultCardList.addItem(createCard(cardItem.name, cardItem.link))
   },
   elements
 );
@@ -67,8 +67,8 @@ formPopupAddElement.setEventListeners();
 // Функция создания новой карточки.
 function submitAddElementForm(obj) {
   
-  // Запускаем функцию создания карточки
-  createCard(obj.name, obj.link)
+  // Запускаем функцию создания карточки и добавления на страницу.
+  defaultCardList.addItem(createCard(obj.name, obj.link));
   
   // Закрываем попап.
   formPopupAddElement.close();
