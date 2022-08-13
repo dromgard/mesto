@@ -1,12 +1,12 @@
-import arkhyz from '../images/arkhyz.jpg';
+/*import arkhyz from '../images/arkhyz.jpg';
 import chelyabinsk from '../images/chelyabinsk-oblast.jpg';
 import ivanovo from '../images/ivanovo.jpg';
 import kamchatka from '../images/kamchatka.jpg';
 import kholmogorsky from '../images/kholmogorsky-rayon.jpg';
-import baikal from '../images/baikal.jpg';
+import baikal from '../images/baikal.jpg';*/
 
 // Массив для создания стартовых карточек.
-export const initialCards = [
+/*export const initialCards = [
   {
     name: 'Архыз',
     link: arkhyz,
@@ -31,12 +31,13 @@ export const initialCards = [
     name: 'Байкал',
     link: baikal,
   },
-];
+];*/
 
 // Задаем объект со именем и описанием профиля на странице.
 export const profileInfo = {
   nameSelector: '.info__name',
-  descriptionSelector: '.info__description'
+  descriptionSelector: '.info__description',
+  avatarSelector: '.profile__avatar'
 };
 
 // Задаем список селекторов внутри формы.

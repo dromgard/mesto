@@ -5,8 +5,9 @@ import { PopupWithImage } from '../components/PopupWithImage.js';
 import { PopupWithForm } from '../components/PopupWithForm.js';
 import { UserInfo } from '../components/UserInfo.js';
 import { FormValidator } from '../components/FormValidator.js';
+import { api } from '../components/Api';
 import {
-  initialCards,
+  //initialCards,
   buttonOpenProfileEdit,
   popupEditProfile,
   buttonAddElement,
@@ -22,6 +23,55 @@ import {
   popupFormAddElement
 } from '../utils/constants.js';
 
+
+
+
+
+// Загружаем информацию о пользователе на страницу.  
+api.getUserInfo()
+  .then((result) => {
+    document.querySelector(profileInfo.nameSelector).textContent = result.name;
+    document.querySelector(profileInfo.descriptionSelector).textContent = result.about;
+    document.querySelector(profileInfo.avatarSelector).style.backgroundImage = `url(${result.avatar})`;
+  })
+  .catch((err) => {
+    console.log(`Ошибка загрузки данных пользователя: ${err}`);
+  })
+
+// Загружаем стартовые карточки с сервера.
+api.getInitialCards()
+  .then((result) => {
+
+    // Передаем в класс Section данные для создания и добавления карточек на страницу.
+    const defaultCardList = new Section(
+      result,
+
+      // Колбеком передаем функцию генерации карточки в классе Card.
+      (cardItem) => {
+        // Запускаем функцию создания карточки и добавления на страницу.
+        defaultCardList.addItem(createCard(cardItem.name, cardItem.link));
+      },
+      elements
+    );
+
+    // Запускаем метод для добавления карточек на страницу.
+    defaultCardList.renderItems();
+  })
+  .catch((err) => {
+    console.log(`Ошибка загрузки карточек с сервера: ${err}`);
+  })
+
+
+
+
+
+
+
+
+
+
+
+
 // Включаем валидацию формы редактирования профиля.
 const formEditProfileValid = new FormValidator(configSelectorForm, popupProfileForm);
 formEditProfileValid.enableValidation();
@@ -36,14 +86,15 @@ function createCard(name, link) {
 
   // Вызываем публичный метод генерации карточки.
   const cardElement = card.generateCard();
-  
+
   // Возвращаем готовую карточку.
   return cardElement;
 }
 
+
 // Передаем в класс Section данные для создания и добавления карточек на страницу.
 const defaultCardList = new Section(
-  initialCards,
+  [],
 
   // Колбеком передаем функцию генерации карточки в классе Card.
   (cardItem) => {
@@ -54,7 +105,7 @@ const defaultCardList = new Section(
 );
 
 // Запускаем метод для добавления карточек на страницу.
-defaultCardList.renderItems();
+//defaultCardList.renderItems();
 
 // Создаем экземпляр попапа редактирования профиля.
 const formPopupProfile = new PopupWithForm(popupEditProfile, submitProfileForm);
@@ -66,12 +117,21 @@ formPopupAddElement.setEventListeners();
 
 // Функция создания новой карточки.
 function submitAddElementForm(obj) {
+
+  // Отправляем данные инпутов для загрузки на сервер.
+  api.addNewCard(obj.name, obj.link)
+
+    // Ловим успешный результат, отображаем новую карточку на страничке и закрываем попап.
+    .then((result) => {
+      defaultCardList.addItem(createCard(result.name, result.link));
+      formPopupAddElement.close();
+    })
+
+    // Ловим ошибку.
+    .catch((err) => {
+      console.log(`Ошибка сохранения новой карточки: ${err}`);
+    })
   
-  // Запускаем функцию создания карточки и добавления на страницу.
-  defaultCardList.addItem(createCard(obj.name, obj.link));
-  
-  // Закрываем попап.
-  formPopupAddElement.close();
 }
 
 // Создаем экземпляр класса редактирования данных профиля на странице. 
@@ -85,10 +145,26 @@ function openProfileForm() {
   formPopupProfile.open();
 }
 
-// Функция сохраняет данные инпутов в провиль и закрывает попап.
+// Функция сохраняет данные инпутов на сервер и закрывает попап.
 function submitProfileForm(obj) {
-  userInfo.setUserInfo(obj.name, obj.description);
+
+  // Отправляем данные инпутов для загрузки на сервер.
+  api.editUserInfo(obj.name, obj.description)
+
+    // Ловим успешный результат и отображаем новые данные на страничке.
+    .then((result) => {
+      userInfo.setUserInfo(result.name, result.about);
+    })
+
+    // Ловим ошибку.
+    .catch((err) => {
+      console.log(`Ошибка сохранения данных пользователя: ${err}`);
+    })
+
+  // Закрываем попап.
   formPopupProfile.close();
+
+
 }
 
 // Создаем экземпляр класса просмотра увеличенного изображения в попапе.
