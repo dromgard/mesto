@@ -19,13 +19,13 @@ class Api {
   }
 
   getInitialCards() {
-    return fetch(`${this._baseUrl}/cards `, {
+    return fetch(`${this._baseUrl}/cards`, {
       headers: this._headers
     }).then(this._handleResponce);
   }
 
   editUserInfo(name, about) {
-    return fetch(`${this._baseUrl}/users/me `, {
+    return fetch(`${this._baseUrl}/users/me`, {
       method: 'PATCH',
       headers: this._headers,
       body: JSON.stringify({
@@ -36,7 +36,7 @@ class Api {
   }
 
   addNewCard(name, link) {
-    return fetch(`${this._baseUrl}/cars `, {
+    return fetch(`${this._baseUrl}/cards`, {
       method: 'POST',
       headers: this._headers,
       body: JSON.stringify({
@@ -45,6 +45,39 @@ class Api {
       })
     }).then(this._handleResponce)
   }
+
+  deleteCard(id) {
+    return fetch(`${this._baseUrl}/cards/${id}`, {
+      method: 'DELETE',
+      headers: this._headers
+    }).then(this._handleResponce)
+  }
+
+  addLike(id) {
+    return fetch(`${this._baseUrl}/cards/${id}/likes`, {
+      method: 'PUT',
+      headers: this._headers
+    }).then(this._handleResponce)
+  }
+
+  deleteLike(id) {
+    return fetch(`${this._baseUrl}/cards/${id}/likes`, {
+      method: 'DELETE',
+      headers: this._headers
+    }).then(this._handleResponce)
+  }
+
+  updateUserAvatar(link) {
+    return fetch(`${this._baseUrl}/users/me/avatar`, {
+      method: 'PATCH',
+      headers: this._headers,
+      body: JSON.stringify({
+        avatar: link
+      })
+    }).then(this._handleResponce)
+  }
+
+
 
 }
 

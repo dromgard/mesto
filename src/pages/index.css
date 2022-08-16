@@ -14,6 +14,8 @@
 
 @import url('../blocks/profile/__avatar/profile__avatar.css');
 
+@import url('../blocks/profile/__avatar-overlay/profile__avatar-overlay.css');
+
 @import url('../blocks/profile/__info/profile__info.css');
 
 @import url('../blocks/info/info.css');
@@ -36,7 +38,11 @@
 
 @import url('../blocks/element/__title/element__title.css');
 
+@import url('../blocks/element/__like/__like-block/element__like-block.css');
+
 @import url('../blocks/element/__like/element__like.css');
+
+@import url('../blocks/element/__like/__like-count/element__like-count.css');
 
 @import url('../blocks/element/__like/_active/element__like_active.css');
 

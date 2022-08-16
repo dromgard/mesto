@@ -9,6 +9,10 @@ export class Section {
     this._items.forEach(item => this._renderer(item));
   }
 
+  deleteItem(item) {
+    item.remove();
+  }
+
   addItem(element) {
     this._container.append(element);
   }

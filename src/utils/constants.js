@@ -71,6 +71,15 @@ export const popupEditDescription = document.querySelector('.popup__input_type_d
 // Привязываем константы к значениям элементов открытия попапа превью изображения.
 export const popupImagePreview = document.querySelector('.popup_type_image-preview');
 
+// Привязываем константу к значениям элементов открытия попапа подтверждения удаления.
+export const popupConfirmDelete = document.querySelector('.popup_type_confirm');
+
+// Привязываем константу к элементу аватарки профиля.
+export const avatarElement = document.querySelector('.profile__avatar');
+
+// Привязываем константу к значениям элементов открытия попапа обновления аватарки.
+export const popupFormAvatarUpdate = document.querySelector('.popup_type_change-avatar');
+
 // Задаем переменной шаблон Template.
 export const elementTemplate = document.querySelector('#element').content;
 
