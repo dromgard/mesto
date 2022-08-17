@@ -6,9 +6,8 @@ import { PopupWithForm } from '../components/PopupWithForm.js';
 import { PopupWithConfirm } from '../components/PopupWithConfirm.js';
 import { UserInfo } from '../components/UserInfo.js';
 import { FormValidator } from '../components/FormValidator.js';
-import { api } from '../components/Api';
+import { Api } from '../components/Api.js';
 import {
-  //initialCards,
   buttonOpenProfileEdit,
   popupEditProfile,
   buttonAddElement,
@@ -27,6 +26,15 @@ import {
   avatarElement
 } from '../utils/constants.js';
 
+// Создаем экземпляр класса подключения к серверу.
+const api = new Api({
+  baseUrl: 'https://mesto.nomoreparties.co/v1/cohort-48',
+  headers: {
+    authorization: '7e5b2ceb-9034-4735-bb3b-2ce2a4adf48b',
+    'Content-Type': 'application/json'
+  }
+}); 
+
 // Загружаем информацию о пользователе на страницу.  
 api.getUserInfo()
   .then((result) => {
@@ -38,8 +46,7 @@ api.getUserInfo()
     console.log(`Ошибка загрузки данных пользователя: ${err}`);
   })
 
-
-// Функция обновления аватарки.
+// Функция обновления аватарки по кнопке submit.
 function submitAvatarForm(obj) {
   popapAvatarUpdate.showSavingMessage();
   api.updateUserAvatar(obj.link)
@@ -53,12 +60,11 @@ function submitAvatarForm(obj) {
     .finally(() => popapAvatarUpdate.hideSavingMessage());
 };
 
-
 // Создаем экземпляр класса попапа обновления аватарки.
 const popapAvatarUpdate = new PopupWithForm(popupFormAvatarUpdate, submitAvatarForm);
 popapAvatarUpdate.setEventListeners();
 
-// Функция удаления карточки.
+// Функция удаления карточки после нажатия на кнопку submit.
 function deleteUserCard(id, card) {
   api.deleteCard(id)
     .then(() => {
@@ -70,9 +76,6 @@ function deleteUserCard(id, card) {
     });
 };
 
-
-
-
 // Создаем экземпляр класса попапа подтверждения удаления.
 const popupConfirm = new PopupWithConfirm(popupConfirmDelete, deleteUserCard);
 popupConfirm.setEventListeners();
@@ -83,16 +86,16 @@ function handleDeleteCard(id, card) {
 }
 
 // Функция обработчик проставления лайка.
-const handleLikeElement = (id, likeElement, likeToggle) => {
+function handleLikeElement(id, likeElement, likeToggle) {
   if (likeElement.classList.contains('element__like_active')) {
     api.deleteLike(id)
-      .then((result) => likeToggle(result, false))
+      .then((result) => likeToggle(result))
       .catch((err) => {
         console.log(`Ошибка удаления лайка: ${err}`);
       });
   } else {
     api.addLike(id)
-      .then((result) => likeToggle(result, true))
+      .then((result) => likeToggle(result))
       .catch((err) => {
         console.log(`Ошибка добавления лайка: ${err}`);
       });
@@ -142,9 +145,6 @@ function createCard(name, link, likes, id, handleDeleteCard, idCardCompare, hand
 
   // Вызываем публичный метод генерации карточки.
   return card.generateCard(idCardCompare, idLikeCompare);
-
-  // Возвращаем готовую карточку.
-  //return cardElement;
 }
 
 // Передаем в класс Section данные для создания и добавления карточек на страницу.
@@ -158,10 +158,6 @@ const defaultCardList = new Section(
   },
   elements
 );
-
-// Запускаем метод для добавления карточек на страницу.
-//defaultCardList.renderItems();
-
 
 // Создаем экземпляр попапа редактирования профиля.
 const formPopupProfile = new PopupWithForm(popupEditProfile, submitProfileForm);
@@ -190,8 +186,6 @@ function submitAddElementForm(obj) {
       console.log(`Ошибка сохранения новой карточки: ${err}`);
     })
     .finally(() => formPopupAddElement.hideSavingMessage());
-
-
 }
 
 // Создаем экземпляр класса редактирования данных профиля на странице. 
@@ -225,8 +219,6 @@ function submitProfileForm(obj) {
 
   // Закрываем попап.
   formPopupProfile.close();
-
-
 }
 
 // Создаем экземпляр класса просмотра увеличенного изображения в попапе.

@@ -6,8 +6,8 @@ export class Card {
     this._template = template;
     this._element = this._getTemplate();
     this._cardImage = this._element.querySelector('.element__image');
-    this._likeElement =  this._element.querySelector('.element__like');
-    this._likeCounter =  this._element.querySelector('.element__like-count');
+    this._likeElement = this._element.querySelector('.element__like');
+    this._likeCounter = this._element.querySelector('.element__like-count');
     this._handleCardClick = handleCardClick;
     this._likes = likes;
     this._id = id;
@@ -32,11 +32,13 @@ export class Card {
     this._element.querySelector('.element__title').textContent = this._text;
     this._element.querySelector('.element__like-count').textContent = this._likes.length;
 
+    // Если карточка не моя, то убираем значок корзины.
     if (!idCardCompare) {
       this._element.querySelector('.element__delete')
         .remove();
     }
 
+    // Если лайк мой, то делаем его активным.
     if (likeCompare) {
       this._likeElement.classList.add('element__like_active');
     }
@@ -45,22 +47,14 @@ export class Card {
   }
 
   // Проставление лайка.
-  _toggleLike(likesArr, status) {
-    if (!status) {
-      this._likeCounter.textContent = Math.max(0, likesArr.likes.length);
-    } else {
-      this._likeCounter.textContent = likesArr.likes.length;
-    }
+  _toggleLike(likesArr) {
+    this._likeCounter.textContent = likesArr.likes.length;
     this._likeElement.classList.toggle('element__like_active');
   }
 
   // Удаление элемента.
   _deleteCard() {
-    //console.log(2);
     this._handleDeleteCard(this._id, this._element);
-
-    //this._element.remove();
-    //this._element = null;
   }
 
   // Открытие попапа с превью изображения.
@@ -72,12 +66,9 @@ export class Card {
   _setEventListeners() {
     this._likeElement.addEventListener('click', () => {
       this._handleLikeElement(this._id, this._likeElement, this._toggleLike.bind(this));
-      //this._toggleLike(evt);
     });
 
     this._element.querySelector('.element__delete').addEventListener('click', () => {
-      //console.log(this._handleDeleteCard);
-      //this._handleDeleteCard(this._id, this._element);
       this._deleteCard();
     });
 

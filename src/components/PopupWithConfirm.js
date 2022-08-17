@@ -7,7 +7,7 @@ export class PopupWithConfirm extends Popup {
     this._handlerSubmitForm = handlerSubmitForm;
   }
 
-
+  // Открываем попап подтверждения удаления карточки. В него попадает id карточки и сама карточка.
   open(id, card) {
     this._id = id;
     this._card = card;
@@ -15,13 +15,14 @@ export class PopupWithConfirm extends Popup {
     super.open();
   }
 
+  // При нажатии на кнопку submit передаем в колбэк id карточки и саму карточку для удаления.
   setEventListeners() {
     this._form.addEventListener('submit', (evt) => {
       evt.preventDefault();
       this._handlerSubmitForm(this._id, this._card);
     });
 
-   super.setEventListeners();
+    super.setEventListeners();
   }
 
 }
