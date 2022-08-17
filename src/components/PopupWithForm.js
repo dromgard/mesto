@@ -7,6 +7,7 @@ export class PopupWithForm extends Popup {
     this._form = this._popup.querySelector('.popup__form');
     this._inputList = this._form.querySelectorAll('.popup__input');
     this._submitButton = this._popup.querySelector('.popup__save');
+    this._submitButtonText = this._submitButton.textContent;
     this._formInputsValues = {};
   }
 
@@ -34,18 +35,12 @@ export class PopupWithForm extends Popup {
     this._form.reset();
   }
 
-  // Показываем на кнопке Submit процесс сохранения.
-  showSavingMessage() {
-    this._submitButton.textContent = 'Сохранение...';
-  }
-
-  // Убираем с кнопки Submit процесс сохранения.
-  hideSavingMessage() {
-    if (this._form.classList.contains('popup__form_type_add-element')) {
-      this._submitButton.textContent = 'Создать';
+  // Показываем процесс загрузки данных на кнопке submit.
+  renderLoading(isLoading, loadingText='Сохранение...') {
+    if (isLoading) {
+      this._submitButton.textContent = loadingText;
     } else {
-      this._submitButton.textContent = 'Сохранить';
+      this._submitButton.textContent = this._submitButtonText;
     }
-
   }
 }

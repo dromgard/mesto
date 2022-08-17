@@ -8,6 +8,7 @@ export class Card {
     this._cardImage = this._element.querySelector('.element__image');
     this._likeElement = this._element.querySelector('.element__like');
     this._likeCounter = this._element.querySelector('.element__like-count');
+    this._deleteElement = this._element.querySelector('.element__delete');
     this._handleCardClick = handleCardClick;
     this._likes = likes;
     this._id = id;
@@ -30,11 +31,11 @@ export class Card {
     this._cardImage.alt = this._text;
 
     this._element.querySelector('.element__title').textContent = this._text;
-    this._element.querySelector('.element__like-count').textContent = this._likes.length;
+    this._likeCounter.textContent = this._likes.length;
 
     // Если карточка не моя, то убираем значок корзины.
     if (!idCardCompare) {
-      this._element.querySelector('.element__delete')
+      this._deleteElement
         .remove();
     }
 
@@ -65,10 +66,14 @@ export class Card {
   // Навешиваем слушатели.
   _setEventListeners() {
     this._likeElement.addEventListener('click', () => {
-      this._handleLikeElement(this._id, this._likeElement, this._toggleLike.bind(this));
+      if (this._likeElement.classList.contains('element__like_active')) {
+        this._handleLikeElement(this._id, this._toggleLike.bind(this), true);
+      } else {
+        this._handleLikeElement(this._id, this._toggleLike.bind(this), false);
+      }
     });
 
-    this._element.querySelector('.element__delete').addEventListener('click', () => {
+    this._deleteElement.addEventListener('click', () => {
       this._deleteCard();
     });
 

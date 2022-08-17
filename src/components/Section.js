@@ -1,19 +1,25 @@
 export class Section {
-  constructor(items, renderer, container) {
-    this._items = items;
+  constructor(renderer, container) {
     this._renderer = renderer;
     this._container = container;
   }
 
-  renderItems() {
-    this._items.forEach(item => this._renderer(item));
+  // Этим методом отрисовываем карточки при загрузке страницы.
+  renderItems(items) {
+    items.forEach(item => this._renderer(item));
   }
 
   deleteItem(item) {
     item.remove();
   }
 
-  addItem(element) {
+  //Добавляем карточки в начало списка.
+  addItemPrepend(element) {
+    this._container.prepend(element);
+  }
+
+  //Добавляем карточки в конец списка.
+  addItemAppend(element) {
     this._container.append(element);
   }
 }

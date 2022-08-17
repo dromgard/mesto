@@ -23,7 +23,7 @@ import {
   popupFormAddElement,
   popupConfirmDelete,
   popupFormAvatarUpdate,
-  avatarElement
+  avatarElement,
 } from '../utils/constants.js';
 
 // Создаем экземпляр класса подключения к серверу.
@@ -33,31 +33,37 @@ const api = new Api({
     authorization: '7e5b2ceb-9034-4735-bb3b-2ce2a4adf48b',
     'Content-Type': 'application/json'
   }
-}); 
+});
 
-// Загружаем информацию о пользователе на страницу.  
-api.getUserInfo()
-  .then((result) => {
-    document.querySelector(profileInfo.nameSelector).textContent = result.name;
-    document.querySelector(profileInfo.descriptionSelector).textContent = result.about;
-    avatarElement.style.backgroundImage = `url(${result.avatar})`;
-  })
-  .catch((err) => {
-    console.log(`Ошибка загрузки данных пользователя: ${err}`);
-  })
+// Создаем экземпляр класса редактирования данных профиля на странице. 
+const userInfo = new UserInfo(profileInfo);
+
+let userId;
+
+const cardList = new Section(
+  (cardItem) => {
+    // Колбэк функции создания карточки и добавления на страницу.
+    const idCardCompare = userId === cardItem.owner._id;
+    const idLikeCompare = cardItem.likes.some((like) => like._id === userId);
+    cardList.addItemAppend(createCard(cardItem.name, cardItem.link, cardItem.likes, cardItem._id, handleDeleteCard, idCardCompare, handleLikeElement, idLikeCompare));
+  }
+  ,
+  elements
+);
 
 // Функция обновления аватарки по кнопке submit.
 function submitAvatarForm(obj) {
-  popapAvatarUpdate.showSavingMessage();
+  popapAvatarUpdate.renderLoading(true);
   api.updateUserAvatar(obj.link)
     .then((result) => {
-      avatarElement.style.backgroundImage = `url(${result.avatar})`;
+      userInfo.setUserInfo(result);
+      userInfo.renderUserAvatar();
       popapAvatarUpdate.close();
     })
     .catch((err) => {
       console.log(`Ошибка обновления аватара: ${err}`);
     })
-    .finally(() => popapAvatarUpdate.hideSavingMessage());
+    .finally(() => popapAvatarUpdate.renderLoading(false));
 };
 
 // Создаем экземпляр класса попапа обновления аватарки.
@@ -68,7 +74,7 @@ popapAvatarUpdate.setEventListeners();
 function deleteUserCard(id, card) {
   api.deleteCard(id)
     .then(() => {
-      defaultCardList.deleteItem(card);
+      cardList.deleteItem(card);
       popupConfirm.close();
     })
     .catch((err) => {
@@ -86,8 +92,8 @@ function handleDeleteCard(id, card) {
 }
 
 // Функция обработчик проставления лайка.
-function handleLikeElement(id, likeElement, likeToggle) {
-  if (likeElement.classList.contains('element__like_active')) {
+function handleLikeElement(id, likeToggle, isLiked) {
+  if (isLiked) {
     api.deleteLike(id)
       .then((result) => likeToggle(result))
       .catch((err) => {
@@ -101,31 +107,6 @@ function handleLikeElement(id, likeElement, likeToggle) {
       });
   }
 };
-
-// Загружаем стартовые карточки с сервера.
-api.getInitialCards()
-  .then((result) => {
-
-    // Передаем в класс Section данные для создания и добавления карточек на страницу.
-    const defaultCardList = new Section(
-      result,
-
-      // Колбеком передаем функцию генерации карточки в классе Card.
-      (cardItem) => {
-        // Запускаем функцию создания карточки и добавления на страницу.
-        const idCardCompare = '228dfe54eee38c362f8e308a' === cardItem.owner._id;
-        const idLikeCompare = cardItem.likes.some((like) => like._id === '228dfe54eee38c362f8e308a');
-        defaultCardList.addItem(createCard(cardItem.name, cardItem.link, cardItem.likes, cardItem._id, handleDeleteCard, idCardCompare, handleLikeElement, idLikeCompare));
-      },
-      elements
-    );
-
-    // Запускаем метод для добавления карточек на страницу.
-    defaultCardList.renderItems();
-  })
-  .catch((err) => {
-    console.log(`Ошибка загрузки карточек с сервера: ${err}`);
-  })
 
 // Включаем валидацию формы редактирования профиля.
 const formEditProfileValid = new FormValidator(configSelectorForm, popupProfileForm);
@@ -147,18 +128,6 @@ function createCard(name, link, likes, id, handleDeleteCard, idCardCompare, hand
   return card.generateCard(idCardCompare, idLikeCompare);
 }
 
-// Передаем в класс Section данные для создания и добавления карточек на страницу.
-const defaultCardList = new Section(
-  [],
-
-  // Колбеком передаем функцию генерации карточки в классе Card.
-  (cardItem) => {
-    // Запускаем функцию создания карточки и добавления на страницу.
-    defaultCardList.addItem(createCard(cardItem.name, cardItem.link));
-  },
-  elements
-);
-
 // Создаем экземпляр попапа редактирования профиля.
 const formPopupProfile = new PopupWithForm(popupEditProfile, submitProfileForm);
 formPopupProfile.setEventListeners();
@@ -169,15 +138,15 @@ formPopupAddElement.setEventListeners();
 
 // Функция создания новой карточки.
 function submitAddElementForm(obj) {
-  formPopupAddElement.showSavingMessage();
+  formPopupAddElement.renderLoading(true);
 
   // Отправляем данные инпутов для загрузки на сервер.
   api.addNewCard(obj.name, obj.link)
-  
+
 
     // Ловим успешный результат, отображаем новую карточку на страничке и закрываем попап.
     .then((result) => {
-      defaultCardList.addItem(createCard(result.name, result.link, [], result._id, handleDeleteCard, true, handleLikeElement, false));
+      cardList.addItemPrepend(createCard(result.name, result.link, [], result._id, handleDeleteCard, true, handleLikeElement, false));
       formPopupAddElement.close();
     })
 
@@ -185,11 +154,8 @@ function submitAddElementForm(obj) {
     .catch((err) => {
       console.log(`Ошибка сохранения новой карточки: ${err}`);
     })
-    .finally(() => formPopupAddElement.hideSavingMessage());
+    .finally(() => formPopupAddElement.renderLoading(false));
 }
-
-// Создаем экземпляр класса редактирования данных профиля на странице. 
-const userInfo = new UserInfo(profileInfo);
 
 // Функция открывает попап редактирования профиля и проставляет имя и описание в инпуты.
 function openProfileForm() {
@@ -201,24 +167,23 @@ function openProfileForm() {
 
 // Функция сохраняет данные инпутов на сервер и закрывает попап.
 function submitProfileForm(obj) {
-  formPopupProfile.showSavingMessage();
+  formPopupProfile.renderLoading(true);
 
   // Отправляем данные инпутов для загрузки на сервер.
   api.editUserInfo(obj.name, obj.description)
 
     // Ловим успешный результат и отображаем новые данные на страничке.
     .then((result) => {
-      userInfo.setUserInfo(result.name, result.about);
+      userInfo.setUserInfo(result);
+      userInfo.renderUserInfo();
+      formPopupProfile.close();
     })
 
     // Ловим ошибку.
     .catch((err) => {
       console.log(`Ошибка сохранения данных пользователя: ${err}`);
     })
-    .finally(() => formPopupProfile.hideSavingMessage());
-
-  // Закрываем попап.
-  formPopupProfile.close();
+    .finally(() => formPopupProfile.renderLoading(false));
 }
 
 // Создаем экземпляр класса просмотра увеличенного изображения в попапе.
@@ -228,6 +193,26 @@ const previeImage = new PopupWithImage(popupImagePreview)
 function handleCardClick(name, link) {
   previeImage.open(name, link);
 }
+
+Promise.all([
+  // Получаем информацию о пользователе.
+  api.getUserInfo(),
+  // Получаем набор карточек.
+  api.getInitialCards()
+])
+  .then(([userData, cards]) => {
+    // Загружаем информацию о пользователе на страницу.
+    userInfo.setUserInfo(userData);
+    userInfo.renderUserInfo();
+    userInfo.renderUserAvatar();
+    userId = userData._id;
+
+    // Загружаем карточки на страницу.
+    cardList.renderItems(cards);
+  })
+  .catch(err => {
+    console.log(`Ошибка загрузки данных с сервера: ${err}`);
+  });
 
 // LISTENERS
 // При нажатии на кнопку "Редактировать" открываем попап редактирования данных профиля.
